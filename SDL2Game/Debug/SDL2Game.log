@@ -1,6 +1,16 @@
-﻿  player_object.cpp
+﻿cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
+  main.cpp
 c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(37): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
 c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(49): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(76): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(77): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+  player_object.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(37): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(49): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(82): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(83): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(138): warning C4305: '+=' : truncation from 'double' to 'float'
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(164): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(165): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(167): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(168): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+  Generating Code...
   SDL2Game.vcxproj -> C:\Users\DZUNG NGUYEN\Desktop\SDL2Game\Debug\SDL2Game.exe

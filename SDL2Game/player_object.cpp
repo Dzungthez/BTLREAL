@@ -12,6 +12,12 @@ MainObject::MainObject()
 	width_frame_ = 0;
 	height_frame_ = 0;
 	status_ = -1;
+
+	input_type_.left_ = 0;
+	input_type_.right_ = 0;
+	input_type_.jump_ = 0;
+	input_type_.down_ = 0;
+	input_type_.up_ = 0;
 }
 
 MainObject :: ~MainObject()
@@ -20,7 +26,7 @@ MainObject :: ~MainObject()
 
 }
 
-bool MainObject::LoadImg(std::string path, SDL_Renderer* screen)
+bool MainObject::LoadImg(std::string path, SDL_Renderer* screen) // load anh
 {
 	bool ret = BaseObject::LoadImg(path, screen);
 	if (ret == true)
@@ -31,7 +37,7 @@ bool MainObject::LoadImg(std::string path, SDL_Renderer* screen)
 	return ret;
 }
 
-void MainObject::set_clips()
+void MainObject::set_clips() // gan 8 frame motion vao mang frame_clip[]
 {
 	if (width_frame_ > 0 &&height_frame_ > 0)
 	{
@@ -50,7 +56,7 @@ void MainObject::set_clips()
 	}
 }
 
-void MainObject::Show(SDL_Renderer* des)
+void MainObject::Show(SDL_Renderer* des) // show chuyen dong 
 {
 	if (status_ == WALK_LEFT)
 	{
@@ -93,12 +99,14 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 		{
 			status_ = WALK_RIGHT;
 			input_type_.right_ = 1;
+			input_type_.left_ = 0;
 		}
 		break;
 		case SDLK_LEFT:
 		{
 			status_ = WALK_LEFT;
 			input_type_.left_ = 1;
+			input_type_.right_ = 0;
 		}
 		break;
 		default:
@@ -122,4 +130,41 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 		
 		}
 	}
+}
+
+void MainObject::DoPlayer(Map& map_data)
+{
+	x_val_ = 0;
+	y_val_ += 0.8;
+	if (y_val_ >= MAX_FALL_SPEED)
+	{
+		y_val_ = MAX_FALL_SPEED;
+	}
+	if (input_type_.left_ == 1)
+	{
+		x_val_ -= PLAYER_SPEED;
+	}
+	else if (input_type_.right_ == 1)
+	{
+		x_val_ += PLAYER_SPEED;
+	}
+	CheckToMap(map_data); // kiem tra van de va cham giua map va nhan nhan vat
+}
+
+void MainObject ::  CheckToMap(Map& map_data)
+{
+	int x1 = 0; //
+	int x2 = 0; // gioi han kiem tra theo chieu x, tu x1-> x2
+
+	int y1 = 0;
+	int y2 = 0;
+
+	// check horizontal
+	int height_min = height_frame_ < TILE_SIZE ? height_frame_ : TILE_SIZE;
+	x1 = (x_pos_ + x_val_) / TILE_SIZE;
+	x2 = (x_pos_ + x_val_ + width_frame_ - 1) / TILE_SIZE;
+
+	y1 = (y_pos_) / TILE_SIZE;
+	y2 = (y_pos_ + height_frame_ - 1) / TILE_SIZE;
+
 }
