@@ -21,7 +21,7 @@ public:
     SDL_Rect GetRect() const {return rect_;}
     SDL_Texture *GetObject() const {return p_object_;}
 
-    bool LoadImg (std :: string, SDL_Renderer *screen);
+    virtual bool LoadImg (std :: string, SDL_Renderer *screen);
     void Render (SDL_Renderer * des, const SDL_Rect* clip = NULL);
     void Free();
 
