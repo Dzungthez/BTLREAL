@@ -5,10 +5,10 @@
 #include "CommonFunc.h"
 #include "BaseObject.h"
 
-#define GRAVITY_SPEED 0.8
+#define GRAVITY_SPEED 2
 #define MAX_FALL_SPEED 10
-#define PLAYER_SPEED 1
-
+#define PLAYER_SPEED 8
+#define PLAYER_JUMP_VALUE 15
 class MainObject : public BaseObject
 {
 public:
@@ -49,6 +49,7 @@ private:
 	int map_x_; // control map position
 	int map_y_;
 
+	int come_back_time;
 };
 
 

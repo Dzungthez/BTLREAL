@@ -19,6 +19,7 @@ MainObject::MainObject()
 	input_type_.down_ = 0;
 	input_type_.up_ = 0;
 
+	come_back_time = 0;
 	map_x_ = 0;
 	map_y_ = 0;
 }
@@ -52,7 +53,7 @@ void MainObject::set_clips() // gan 8 frame motion vao mang frame_clip[]
 			frame_clip_[i].y = 0;
 			frame_clip_[i].w = width_frame_;
 			frame_clip_[i].h = height_frame_;
-			x_size += width_frame_;
+			if (i < 7) { x_size += width_frame_; }
 			
 		}
 	}
@@ -60,14 +61,18 @@ void MainObject::set_clips() // gan 8 frame motion vao mang frame_clip[]
 
 void MainObject::Show(SDL_Renderer* des) // show chuyen dong 
 {
-	if (status_ == WALK_LEFT)
+	if (on_ground == true)
 	{
-		LoadImg("img//player_left.png", des);
+		if (status_ == WALK_LEFT)
+		{
+			LoadImg("img//player_left.png", des);
+		}
+		else
+		{
+			LoadImg("img//player_right.png", des);
+		}
 	}
-	else
-	{
-		LoadImg("img//player_right.png", des);
-	}
+	
 	if (input_type_.left_ == 1 || 
 			input_type_.right_ == 1)
 	{
@@ -102,6 +107,14 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 			status_ = WALK_RIGHT;
 			input_type_.right_ = 1;
 			input_type_.left_ = 0;
+			if (on_ground == true)
+			{
+				LoadImg("img/player_right.png", screen);
+			}
+			else
+			{
+				LoadImg("img/jump_right.png", screen);
+			}
 		}
 		break;
 		case SDLK_LEFT:
@@ -109,6 +122,14 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 			status_ = WALK_LEFT;
 			input_type_.left_ = 1;
 			input_type_.right_ = 0;
+			if (on_ground == true)
+			{
+				LoadImg("img/player_left.png", screen);
+			}
+			else
+			{
+				LoadImg("img/jump_left.png", screen);
+			}
 		}
 		break;
 		default:
@@ -132,26 +153,66 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 		
 		}
 	}
+	if (events.type == SDL_MOUSEBUTTONDOWN)
+	{
+		if (events.button.button == SDL_BUTTON_RIGHT)
+		{
+			input_type_.jump_ = 1;
+		}
+	}
 }
 
 void MainObject::DoPlayer(Map& map_data)
 {
-	x_val_ = 0; // speed
-	y_val_ += 0.05;
-	if (y_val_ >= MAX_FALL_SPEED)
+	if (come_back_time == 0)
 	{
-		y_val_ = MAX_FALL_SPEED;
+		x_val_ = 0; // speed
+		y_val_ += 0.8;
+		if (y_val_ >= MAX_FALL_SPEED)
+		{
+			y_val_ = MAX_FALL_SPEED;
+		}
+		if (input_type_.left_ == 1)
+		{
+			x_val_ -= PLAYER_SPEED;
+		}
+		else if (input_type_.right_ == 1)
+		{
+			x_val_ += PLAYER_SPEED;
+		}
+		if (input_type_.jump_ == 1)
+		{
+			if (on_ground == true)
+			{
+				y_val_ = -PLAYER_JUMP_VALUE;
+
+			}
+			on_ground = false;
+			input_type_.jump_ = 0;
+		}
+		CheckToMap(map_data); // kiem tra van de va cham giua map va nhan nhan vat
+		CenterEntityOnMap(map_data);
 	}
-	if (input_type_.left_ == 1)
+	if (come_back_time != 0)
 	{
-		x_val_ -= PLAYER_SPEED;
+		come_back_time--;
+		if (come_back_time == 0)
+		{
+			if (x_pos_ > 256)
+			{
+				x_pos_ -= 256; // 4 o tile map
+				map_x_ -= 256;
+			}
+			else
+			{
+				x_pos_ = 0;
+			}
+			y_pos_ = 0;
+			x_val_ = 0;
+			y_val_ = 0;
+		}
 	}
-	else if (input_type_.right_ == 1)
-	{
-		x_val_ += PLAYER_SPEED;
-	}
-	CheckToMap(map_data); // kiem tra van de va cham giua map va nhan nhan vat
-	CenterEntityOnMap(map_data);
+	
 }
 void MainObject::CenterEntityOnMap(Map& map_data)
 {
@@ -254,5 +315,9 @@ void MainObject ::  CheckToMap(Map& map_data)
 	else if (x_pos_ + width_frame_ > map_data.max_x_)
 	{
 		x_pos_ = map_data.max_x_ - width_frame_ - 1;
+	}
+	if (y_pos_ > map_data.max_y_)
+	{
+		come_back_time = 40;
 	}
 }

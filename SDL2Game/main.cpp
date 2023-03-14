@@ -6,6 +6,7 @@
 #include "BaseObject.h"
 #include "game_map.h"
 #include "player_object.h"
+#include "ImpTimer.h"
 BaseObject g_background;
 bool init()
 {
@@ -92,6 +93,7 @@ void close ()
 }
 int main( int argc, char* argv[] )
 {
+	ImpTimer fps_timer;
     if (!init())
     {
 		printf("could not init %s\n", SDL_GetError());
@@ -115,6 +117,7 @@ int main( int argc, char* argv[] )
 	bool quit = false;
 	while (!quit)
     {
+		fps_timer.start();
         while (SDL_PollEvent(&e) != 0)
         {
             if (e.type == SDL_QUIT)
@@ -143,6 +146,13 @@ int main( int argc, char* argv[] )
 		game_map.DrawMap(gScreen);
 
         SDL_RenderPresent(gScreen);
+		int real_imp_time = fps_timer.get_ticks();
+		int time_one_frame = 1000 / FRAME_PER_SECOND; // 1000 MILISEC
+		if (real_imp_time < time_one_frame)
+		{
+			int delay_time = time_one_frame - real_imp_time;
+			SDL_Delay(delay_time); // 
+		}
 
     }
 
