@@ -28,6 +28,8 @@ public:
 	void set_clips(); // xu ly animations
 	void DoPlayer(Map& map_data);
 	void CheckToMap(Map& map_data);
+	void SetMapXY(const int map_x, const int map_y) { map_x_ = map_x; map_y_ = map_y; }
+	void CenterEntityOnMap(Map& map_data);
 private:
 	float x_val_; 
 	float y_val_; // ko that su can thiet vi nhan vat chay tren mat dat
@@ -43,6 +45,9 @@ private:
 	int frame_; //current frame - 0 1 2....
 	int status_; // left or right;
 	bool on_ground;
+
+	int map_x_; // control map position
+	int map_y_;
 
 };
 

@@ -18,6 +18,9 @@ MainObject::MainObject()
 	input_type_.jump_ = 0;
 	input_type_.down_ = 0;
 	input_type_.up_ = 0;
+
+	map_x_ = 0;
+	map_y_ = 0;
 }
 
 MainObject :: ~MainObject()
@@ -27,6 +30,7 @@ MainObject :: ~MainObject()
 }
 
 bool MainObject::LoadImg(std::string path, SDL_Renderer* screen) // load anh
+
 {
 	bool ret = BaseObject::LoadImg(path, screen);
 	if (ret == true)
@@ -42,15 +46,13 @@ void MainObject::set_clips() // gan 8 frame motion vao mang frame_clip[]
 	if (width_frame_ > 0 &&height_frame_ > 0)
 	{
 		int x_size = 0;
-		int w_size = width_frame_;
 		for (int i = 0; i < 8; i++)
 		{
 			frame_clip_[i].x = x_size;
 			frame_clip_[i].y = 0;
-			frame_clip_[i].w = w_size;
+			frame_clip_[i].w = width_frame_;
 			frame_clip_[i].h = height_frame_;
 			x_size += width_frame_;
-			w_size += width_frame_;
 			
 		}
 	}
@@ -79,8 +81,8 @@ void MainObject::Show(SDL_Renderer* des) // show chuyen dong
 	{
 		frame_ = 0;
 	}
-	rect_.x = x_pos_;
-	rect_.y = y_pos_;
+	rect_.x = x_pos_ - map_x_; // trừ đi lượng bản đồ đã bị cuốn chiếu
+	rect_.y = y_pos_ - map_y_; 
 
 	SDL_Rect* current_clip = &frame_clip_[frame_];
 
@@ -149,6 +151,29 @@ void MainObject::DoPlayer(Map& map_data)
 		x_val_ += PLAYER_SPEED;
 	}
 	CheckToMap(map_data); // kiem tra van de va cham giua map va nhan nhan vat
+	CenterEntityOnMap(map_data);
+}
+void MainObject::CenterEntityOnMap(Map& map_data)
+{
+	map_data.start_x_ = x_pos_ - (SCREEN_WIDTH / 2);
+	if (map_data.start_x_ < 0)
+	{
+		map_data.start_x_ = 0;
+	}
+	else if (map_data.start_x_ + SCREEN_WIDTH >= map_data.max_x_)
+	{
+		map_data.start_x_ = map_data.max_x_ - SCREEN_WIDTH;
+	}
+
+	map_data.start_y_ = y_pos_ - (SCREEN_HEIGHT / 2);
+	if (map_data.start_y_ < 0)
+	{
+		map_data.start_y_ = 0;
+	}
+	else if (map_data.start_y_ + SCREEN_HEIGHT >= map_data.max_y_)
+	{
+		map_data.start_y_ = map_data.max_y_ - SCREEN_HEIGHT;
+	}
 }
 
 void MainObject ::  CheckToMap(Map& map_data)
@@ -198,7 +223,7 @@ void MainObject ::  CheckToMap(Map& map_data)
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
 	{
-		if (y_val_ > 0)
+		if (y_val_ > 0) // nhan vat dang roi
 		{
 			if (map_data.tile[y2][x1] != BLANK_TILE || map_data.tile[y2][x2] != BLANK_TILE)
 			{

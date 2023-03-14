@@ -129,14 +129,18 @@ int main( int argc, char* argv[] )
         SDL_RenderClear(gScreen);
 
         g_background.Render(gScreen, NULL);
-		
-		game_map.DrawMap(gScreen);
+
 
 		Map map_data = game_map.getMap();
 
+		p_player.SetMapXY(map_data.start_x_, map_data.start_y_);
+		
 		p_player.DoPlayer(map_data);
 
 		p_player.Show(gScreen);
+
+		game_map.SetMap(map_data);
+		game_map.DrawMap(gScreen);
 
         SDL_RenderPresent(gScreen);
 
