@@ -1,14 +1,14 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "player_object.h"
 
 MainObject::MainObject()
 {
 	frame_ = 0;
-	x_pos_ = 0;
+	x_pos_ = 0; // position
 	y_pos_ = 0;
-	x_val_ = 0;
+	x_val_ = 0; // speed
 	y_val_ = 0;
-
+	on_ground = false;
 	width_frame_ = 0;
 	height_frame_ = 0;
 	status_ = -1;
@@ -84,7 +84,7 @@ void MainObject::Show(SDL_Renderer* des) // show chuyen dong
 
 	SDL_Rect* current_clip = &frame_clip_[frame_];
 
-	SDL_Rect renderQuad = { rect_.x, rect_.y, width_frame_, height_frame_ };
+	SDL_Rect renderQuad = { rect_.x, rect_.y, width_frame_, height_frame_ }; // đẩy object lên trên màn hình (des) với frame vừa created
 
 	SDL_RenderCopy(des, p_object_, current_clip, &renderQuad);
 }
@@ -134,8 +134,8 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 
 void MainObject::DoPlayer(Map& map_data)
 {
-	x_val_ = 0;
-	y_val_ += 0.8;
+	x_val_ = 0; // speed
+	y_val_ += 0.05;
 	if (y_val_ >= MAX_FALL_SPEED)
 	{
 		y_val_ = MAX_FALL_SPEED;
@@ -167,4 +167,67 @@ void MainObject ::  CheckToMap(Map& map_data)
 	y1 = (y_pos_) / TILE_SIZE;
 	y2 = (y_pos_ + height_frame_ - 1) / TILE_SIZE;
 
+	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 <= MAX_MAP_Y)
+	{
+		if (x_val_ > 0) // object is moving to the right 
+		{
+			if (map_data.tile[y1][x2] != BLANK_TILE || map_data.tile[y2][x2] != BLANK_TILE)
+			{
+				x_pos_ = x2 * TILE_SIZE;
+				x_pos_ -= width_frame_ + 1;
+				x_val_ = 0;
+			}
+		}
+		else if (x_val_ < 0)
+		{
+			if (map_data.tile[y1][x1] != BLANK_TILE || map_data.tile[y2][x1] != BLANK_TILE)
+			{
+				x_pos_ = (x1 + 1) * TILE_SIZE;
+				x_val_ = 0;
+			}
+		}
+	}
+	// check vertical
+	int width_min = width_frame_ < TILE_SIZE ? width_frame_ : TILE_SIZE;
+
+	x1 = (x_pos_) / TILE_SIZE;
+	x2 = (x_pos_ + width_min) / TILE_SIZE;
+
+	y1 = (y_pos_ + y_val_) / TILE_SIZE;
+	y2 = (y_pos_ + y_val_ + height_frame_ - 1) / TILE_SIZE; // -1 để đề phòng trường hợp y2 tính ra nguyên trùng với ô tile
+
+	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
+	{
+		if (y_val_ > 0)
+		{
+			if (map_data.tile[y2][x1] != BLANK_TILE || map_data.tile[y2][x2] != BLANK_TILE)
+			{
+				y_pos_ = y2 * TILE_SIZE;
+				y_pos_ -= (height_frame_ + 1);
+				y_val_ = 0;
+				on_ground = true; 
+			}
+		}
+		else if (y_val_ < 0) // nhan vat nhay len cao
+		{
+			if (map_data.tile[y1][x1] != BLANK_TILE || map_data.tile[y1][x2] != BLANK_TILE) // object tren ko trugn
+			{
+				y_pos_ = (y1 + 1) * TILE_SIZE;
+				y_val_ = 0;
+			}
+		}
+	}
+	// ko va cham
+	x_pos_ += x_val_;
+	y_pos_ += y_val_;
+
+	if (x_pos_ < 0)
+	{
+		// di het ban do
+		x_pos_ = 0;
+	}
+	else if (x_pos_ + width_frame_ > map_data.max_x_)
+	{
+		x_pos_ = map_data.max_x_ - width_frame_ - 1;
+	}
 }

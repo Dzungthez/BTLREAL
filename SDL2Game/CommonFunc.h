@@ -27,6 +27,7 @@ const int RENDER_DRAW_COLOR = 0xff;
 #define MAX_MAP_X 400
 #define MAX_MAP_Y 10
 
+#define BLANK_TILE 0
 typedef struct Input
 {
 	int left_;

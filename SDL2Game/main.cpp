@@ -110,6 +110,7 @@ int main( int argc, char* argv[] )
 	MainObject p_player;
 	p_player.LoadImg("img/player_right.png", gScreen);
 	p_player.set_clips();
+
 	
 	bool quit = false;
 	while (!quit)
@@ -131,8 +132,11 @@ int main( int argc, char* argv[] )
 		
 		game_map.DrawMap(gScreen);
 
-		p_player.Show(gScreen);
+		Map map_data = game_map.getMap();
 
+		p_player.DoPlayer(map_data);
+
+		p_player.Show(gScreen);
 
         SDL_RenderPresent(gScreen);
 

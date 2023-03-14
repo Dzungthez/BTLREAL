@@ -7,7 +7,7 @@
 
 #define GRAVITY_SPEED 0.8
 #define MAX_FALL_SPEED 10
-#define PLAYER_SPEED 8
+#define PLAYER_SPEED 1
 
 class MainObject : public BaseObject
 {
@@ -42,7 +42,7 @@ private:
 	Input input_type_;
 	int frame_; //current frame - 0 1 2....
 	int status_; // left or right;
-
+	bool on_ground;
 
 };
 
