@@ -11,7 +11,7 @@ MainObject::MainObject()
 	on_ground = false;
 	width_frame_ = 0;
 	height_frame_ = 0;
-	status_ = -1;
+	status_ = WALK_NONE;
 
 	input_type_.left_ = 0;
 	input_type_.right_ = 0;
@@ -44,7 +44,7 @@ bool MainObject::LoadImg(std::string path, SDL_Renderer* screen) // load anh
 
 void MainObject::set_clips() // gan 8 frame motion vao mang frame_clip[]
 {
-	if (width_frame_ > 0 &&height_frame_ > 0)
+	if (width_frame_ > 0 && height_frame_ > 0)
 	{
 		int x_size = 0;
 		for (int i = 0; i < 8; i++)
@@ -61,17 +61,7 @@ void MainObject::set_clips() // gan 8 frame motion vao mang frame_clip[]
 
 void MainObject::Show(SDL_Renderer* des) // show chuyen dong 
 {
-	if (on_ground == true)
-	{
-		if (status_ == WALK_LEFT)
-		{
-			LoadImg("img//player_left.png", des);
-		}
-		else
-		{
-			LoadImg("img//player_right.png", des);
-		}
-	}
+	UpdateImgPlayer(des);
 	
 	if (input_type_.left_ == 1 || 
 			input_type_.right_ == 1)
@@ -107,14 +97,7 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 			status_ = WALK_RIGHT;
 			input_type_.right_ = 1;
 			input_type_.left_ = 0;
-			if (on_ground == true)
-			{
-				LoadImg("img/player_right.png", screen);
-			}
-			else
-			{
-				LoadImg("img/jump_right.png", screen);
-			}
+			UpdateImgPlayer(screen);
 		}
 		break;
 		case SDLK_LEFT:
@@ -122,14 +105,7 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 			status_ = WALK_LEFT;
 			input_type_.left_ = 1;
 			input_type_.right_ = 0;
-			if (on_ground == true)
-			{
-				LoadImg("img/player_left.png", screen);
-			}
-			else
-			{
-				LoadImg("img/jump_left.png", screen);
-			}
+			UpdateImgPlayer(screen);
 		}
 		break;
 		default:
@@ -164,7 +140,7 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 
 void MainObject::DoPlayer(Map& map_data)
 {
-	if (come_back_time == 0)
+	if (come_back_time == 0) 
 	{
 		x_val_ = 0; // speed
 		y_val_ += 0.8;
@@ -198,10 +174,10 @@ void MainObject::DoPlayer(Map& map_data)
 		come_back_time--;
 		if (come_back_time == 0)
 		{
+			on_ground = false; // in order to load jump right
 			if (x_pos_ > 256)
 			{
 				x_pos_ -= 256; // 4 o tile map
-				map_x_ -= 256;
 			}
 			else
 			{
@@ -237,7 +213,7 @@ void MainObject::CenterEntityOnMap(Map& map_data)
 	}
 }
 
-void MainObject ::  CheckToMap(Map& map_data)
+void MainObject :: CheckToMap(Map& map_data)
 {
 	int x1 = 0; //
 	int x2 = 0; // gioi han kiem tra theo chieu x, tu x1-> x2
@@ -253,7 +229,7 @@ void MainObject ::  CheckToMap(Map& map_data)
 	y1 = (y_pos_) / TILE_SIZE;
 	y2 = (y_pos_ + height_frame_ - 1) / TILE_SIZE;
 
-	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 <= MAX_MAP_Y)
+	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
 	{
 		if (x_val_ > 0) // object is moving to the right 
 		{
@@ -291,7 +267,13 @@ void MainObject ::  CheckToMap(Map& map_data)
 				y_pos_ = y2 * TILE_SIZE;
 				y_pos_ -= (height_frame_ + 1);
 				y_val_ = 0;
-				on_ground = true; 
+
+				on_ground = true;
+				if (status_ == WALK_NONE)
+				{
+					status_ = WALK_RIGHT;
+				}
+				 
 			}
 		}
 		else if (y_val_ < 0) // nhan vat nhay len cao
@@ -320,4 +302,35 @@ void MainObject ::  CheckToMap(Map& map_data)
 	{
 		come_back_time = 40;
 	}
+
+}
+void MainObject::UpdateImgPlayer(SDL_Renderer* des) 
+{
+	if (on_ground == true)
+	{
+		/* dùng status dể kiểm tra trạng thái vì nếu dùng input_type, khi tả nhả phím
+		(SDL_KEYUP thì input type lập tức về 0, trong khi status thì giữ nguyên ( quay sang trái
+		*/
+		if (status_ == WALK_LEFT)
+		{
+			LoadImg("img/player_left.png", des);
+		}
+		else
+		{
+			LoadImg("img/player_right.png", des);
+		}
+	}
+	else // trên không 
+	{
+		if (status_ == WALK_LEFT)
+		{
+			LoadImg("img/jump_left.png", des);
+		}
+		else
+		{
+			LoadImg("img/jump_right.png", des);
+		}
+	}
+
+
 }
