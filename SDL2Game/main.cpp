@@ -1,4 +1,4 @@
-// SDL2Game.cpp : Defines the entry point for the console application.
+// Defines the entry point for the console application.
 //
 
 #include "stdafx.h"
@@ -8,6 +8,7 @@
 #include "player_object.h"
 #include "ImpTimer.h"
 BaseObject g_background;
+
 bool init()
 {
 	//Initialization flag
@@ -135,6 +136,8 @@ int main( int argc, char* argv[] )
 
 
 		Map map_data = game_map.getMap();
+
+		p_player.HandleBullet(gScreen);
 
 		p_player.SetMapXY(map_data.start_x_, map_data.start_y_);
 		
