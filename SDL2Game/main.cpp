@@ -7,6 +7,8 @@
 #include "game_map.h"
 #include "player_object.h"
 #include "ImpTimer.h"
+#include "ThreatsObject.h"
+
 BaseObject g_background;
 
 bool init()
@@ -92,6 +94,55 @@ void close ()
     SDL_DestroyWindow(gWindow);
     gWindow = NULL;
 }
+
+std::vector <ThreatsObject*> MakeThreatList()
+{
+
+	std::vector <ThreatsObject*> list_threats;
+
+	ThreatsObject* dynamic_threats = new ThreatsObject[20];
+	for (int i = 0; i < 20; i++)
+	{
+		ThreatsObject* p_threat = (dynamic_threats + i);
+		if (p_threat != NULL)
+		{
+			p_threat->LoadImg("img//threat_left.png", gScreen);
+			p_threat->set_clips();
+			p_threat->set_type_move(ThreatsObject::MOVE_IN_SPACE_THREAT);
+			p_threat->set_x_pos(500 + i * 500);
+			p_threat->set_y_pos(200); // bat dau roi tu vi tri 200
+
+			int pos1 = p_threat->get_x_pos() - 60;
+			int pos2 = p_threat->get_x_pos() + 60; // dam bao pos 1 pos 2 chua dc xpos
+
+			p_threat->SetAnimationPos(pos1, pos2);
+			p_threat->set_input_left(1);
+			list_threats.push_back(p_threat);
+
+
+		}
+	}
+
+	ThreatsObject* threats_objs = new ThreatsObject[20]; // 20 con bot
+
+	for (int i = 0; i < 20; i++)
+	{
+		ThreatsObject* p_threat = (threats_objs + i);
+		if (p_threat != NULL)
+		{
+			p_threat->LoadImg("img//threat_level.png", gScreen);
+			p_threat->set_clips();
+			p_threat->set_type_move(ThreatsObject::STATIC_THREAT);
+			p_threat->set_input_left(0);
+			p_threat->set_x_pos(700 + 1200* i);
+			p_threat->set_y_pos(250); // roi tu vi tri do cao 250
+
+			list_threats.push_back(p_threat);
+		}
+	}
+	return list_threats;
+}
+
 int main( int argc, char* argv[] )
 {
 	ImpTimer fps_timer;
@@ -114,6 +165,7 @@ int main( int argc, char* argv[] )
 	p_player.LoadImg("img/player_right.png", gScreen);
 	p_player.set_clips();
 
+	std::vector<ThreatsObject*> threats_list = MakeThreatList();
 	
 	bool quit = false;
 	while (!quit)
@@ -147,6 +199,18 @@ int main( int argc, char* argv[] )
 
 		game_map.SetMap(map_data);
 		game_map.DrawMap(gScreen);
+
+		for (int i = 0; i < threats_list.size(); i++)
+		{
+			ThreatsObject* p_threat = threats_list.at(i);
+			if (p_threat != NULL)
+			{
+				p_threat->SetMapXY(map_data.start_x_, map_data.start_y_);
+				p_threat->ImpMoveType(gScreen);
+				p_threat->DoPlayer(map_data);
+				p_threat->Show(gScreen);
+			}
+		}
 
         SDL_RenderPresent(gScreen);
 		int real_imp_time = fps_timer.get_ticks();

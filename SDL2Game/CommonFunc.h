@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <string>
 #include <SDL.h>
+#include <vector>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
