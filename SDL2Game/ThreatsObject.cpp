@@ -264,3 +264,51 @@ void ThreatsObject::ImpMoveType(SDL_Renderer* screen)
 		}
 	}
 }
+
+void ThreatsObject::InitBullet(BulletObject* p_bullet, SDL_Renderer* screen)
+{
+	if (p_bullet != NULL)
+	{
+		p_bullet->set_bullet_type(BulletObject::LASER_BULLET);
+		bool ret = p_bullet->LoadImgBullet(screen);
+		if (ret)
+		{
+			p_bullet->set_is_move(true);
+			p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
+			p_bullet->SetRect(rect_.x + 5, rect_.y + 10); // vi tri dan xuat hien
+			p_bullet->set_x_val(15);
+			bullet_list_.push_back(p_bullet);
+		}
+		
+	}
+}
+
+void ThreatsObject::MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit)
+{
+	for (int i = 0; i < bullet_list_.size(); i++)
+	{
+		BulletObject* p_bullet = bullet_list_.at(i);
+		if (p_bullet != NULL)
+		{
+			if (p_bullet->get_is_move())
+			{
+				int bullet_distance = rect_.x + width_frame_ - p_bullet->GetRect().x;
+				if (bullet_distance < 300 && bullet_distance > 0)
+				{
+					p_bullet->HandleMove(x_limit, y_limit);
+					p_bullet->Render(screen);
+				}
+				else
+				{
+					p_bullet->set_is_move(false);
+				}
+				
+			}
+			else // is move = false;
+			{
+				p_bullet->set_is_move(true);
+				p_bullet->SetRect(rect_.x + 5, rect_.y + 10);
+			}
+		}
+	}
+}

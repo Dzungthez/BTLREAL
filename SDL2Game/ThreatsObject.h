@@ -4,6 +4,7 @@
 
 #include "CommonFunc.h"
 #include "BaseObject.h"
+#include"BulletObject.h"
 
 #define THREAT_FRAME_NUM 8
 #define THREAT_GRAVITY_SPEED 0.8
@@ -47,6 +48,12 @@ public:
 	void set_input_left(const int& ipLeft) { input_type_.left_ = ipLeft; }
 	void ImpMoveType(SDL_Renderer* screen);
 	void InitThreat();
+
+	std::vector<BulletObject*> get_bullet_list() const { return bullet_list_; }
+	void set_bullet_list (const std::vector < BulletObject*>& bl_list) { bullet_list_ = bl_list; }
+
+	void InitBullet(BulletObject* p_bullet, SDL_Renderer* screen);
+	void MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit);
 private:
 
 	float x_pos_;
@@ -66,6 +73,8 @@ private:
 	int animation_a_;
 	int animation_b_;
 	Input input_type_;
+
+	std::vector <BulletObject*> bullet_list_;
 };
 
 #endif
