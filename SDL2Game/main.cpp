@@ -6,7 +6,9 @@
 #include "ImpTimer.h"
 #include "ThreatsObject.h"
 #include "ExplosionObject.h"
+#include "TextObject.h"
 
+TTF_Font *font_time = NULL;
 BaseObject g_background;
 bool init()
 {
@@ -55,6 +57,15 @@ bool init()
 					success = false;
 				}
 			}
+			if (TTF_Init() == -1)
+			{
+				success = false;
+			}
+		}
+		font_time = TTF_OpenFont("font//dlxfont_.ttf", 15);
+		if (font_time == NULL)
+		{
+			success = false;
 		}
 	}
 
@@ -172,6 +183,17 @@ int main(int argc, char* argv[])
 	exp_main.set_clip();
 
 	int num_die = 0;
+
+	//time text
+	TextObject time_game;
+	time_game.SetColor(TextObject::WHITE_TEXT);
+
+	TextObject mark_game;
+	mark_game.SetColor(TextObject::WHITE_TEXT);
+	UINT mark_value = 0;
+
+	TextObject money_game;
+	money_game.SetColor(TextObject::WHITE_TEXT);
 
 	bool quit = false;
 	while (!quit)
@@ -303,8 +325,10 @@ int main(int argc, char* argv[])
 						bool bCol = SDLCommonFunc::CheckCollision(bRect, tRect);
 						if (bCol)
 						{
+							mark_value += 5;
 							for (int ex = 0; ex < NUM_FRAME_EXP; ex++)
 							{
+								
 								int x_pos = p_bullet->GetRect().x - frame_exp_width * 0.5;
 								int y_pos = p_bullet->GetRect().y - frame_exp_height * 0.5;
 
@@ -320,7 +344,47 @@ int main(int argc, char* argv[])
 				}
 			}
 		}
+		// show time
+		std::string str_time = "Time: ";
+		Uint32 time_val = SDL_GetTicks() / 1000;
+		Uint32 val_time = 300 - time_val;
 
+		if (val_time <= 0)
+		{
+			if (MessageBox(NULL, L"GAME OVER", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+			{
+				quit = true;
+				break;
+				return 0;
+			}
+			
+		}
+		else
+		{
+			std::string str_val = std::to_string(val_time);
+			str_time += str_val;
+
+			time_game.SetText(str_time);
+			time_game.LoadFromRenderText(font_time, gScreen);
+			time_game.RenderText(gScreen, SCREEN_WIDTH - 200, 15);
+		}
+
+		std::string val_str_mark = std::to_string(mark_value);
+		std::string strMark("Mark: ");
+		strMark += val_str_mark;
+
+		mark_game.SetText(strMark);
+		mark_game.LoadFromRenderText(font_time, gScreen);
+		mark_game.RenderText(gScreen, SCREEN_WIDTH * 0.5 - 50, 15);
+
+		int money_count = p_player.GetMoneyCount();
+		std::string money_str = std::to_string(money_count);
+
+		money_game.SetText(money_str);
+		money_game.LoadFromRenderText(font_time, gScreen);
+		money_game.RenderText(gScreen, SCREEN_WIDTH * 0.5 - 250, 15);
+
+		
 
 		SDL_RenderPresent(gScreen);
 

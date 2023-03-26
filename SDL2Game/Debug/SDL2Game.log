@@ -1,19 +1,21 @@
 ﻿  main.cpp
 c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(47): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
 c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(59): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(96): warning C4244: 'argument' : conversion from 'int' to 'const float', possible loss of data
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(99): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(100): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(117): warning C4244: 'argument' : conversion from 'int' to 'const float', possible loss of data
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(208): warning C4018: '<' : signed/unsigned mismatch
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(223): warning C4018: '<' : signed/unsigned mismatch
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(246): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(247): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(285): warning C4018: '<' : signed/unsigned mismatch
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(290): warning C4018: '<' : signed/unsigned mismatch
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(308): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(309): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(339): warning C4018: '<' : signed/unsigned mismatch
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(107): warning C4244: 'argument' : conversion from 'int' to 'const float', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(110): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(111): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(128): warning C4244: 'argument' : conversion from 'int' to 'const float', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(230): warning C4018: '<' : signed/unsigned mismatch
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(245): warning C4018: '<' : signed/unsigned mismatch
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(268): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(269): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(307): warning C4018: '<' : signed/unsigned mismatch
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(312): warning C4018: '<' : signed/unsigned mismatch
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(332): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(333): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(378): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(385): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(403): warning C4018: '<' : signed/unsigned mismatch
   Generating Code...
   Skipping... (no relevant changes detected)
   player_object.cpp
