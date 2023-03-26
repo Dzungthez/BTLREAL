@@ -1,6 +1,5 @@
-#ifndef IMP_TIMER_H_
-
-#define IMP_TIMER_H_
+#ifndef IMP_TIMER_H
+#define IMP_TIMER_H
 
 class ImpTimer
 {
@@ -24,9 +23,7 @@ private:
 
 	bool is_paused_;
 	bool is_started_;
-
-
 };
 
 
-#endif
+#endif // !IMP_TIMER_H

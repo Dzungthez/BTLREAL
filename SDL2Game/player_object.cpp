@@ -1,17 +1,18 @@
 ﻿#include "stdafx.h"
 #include "player_object.h"
 
+
 MainObject::MainObject()
 {
 	frame_ = 0;
-	x_pos_ = 0; // position
+	x_pos_ = 0;
 	y_pos_ = 0;
-	x_val_ = 0; // speed
+	x_val_ = 0;
 	y_val_ = 0;
-	on_ground = false;
 	width_frame_ = 0;
 	height_frame_ = 0;
-	status_ = WALK_NONE;
+	map_x_ = 0;
+	map_y_ = 0;
 
 	input_type_.left_ = 0;
 	input_type_.right_ = 0;
@@ -19,54 +20,76 @@ MainObject::MainObject()
 	input_type_.down_ = 0;
 	input_type_.up_ = 0;
 
-	come_back_time = 0;
-	map_x_ = 0;
-	map_y_ = 0;
-
+	status_ = WALK_NONE;
+	on_ground_ = false;
+	come_back_time_ = 0;
 	money_count = 0;
 }
 
-MainObject :: ~MainObject()
+MainObject::~MainObject()
 {
-
 
 }
 
-bool MainObject::LoadImg(std::string path, SDL_Renderer* screen) // load anh
-
+bool MainObject::LoadImg(string path, SDL_Renderer* screen)
 {
 	bool ret = BaseObject::LoadImg(path, screen);
+
 	if (ret == true)
 	{
-		width_frame_ = rect_.w / 8; // so luong frame
+		width_frame_ = rect_.w / 8;
 		height_frame_ = rect_.h;
 	}
+
 	return ret;
 }
 
-void MainObject::set_clips() // gan 8 frame motion vao mang frame_clip[]
+
+SDL_Rect MainObject::GetRectFrame()
+{
+	SDL_Rect rect;
+	rect.x = rect_.x;
+	rect.y = rect_.y;
+	rect.w = width_frame_;
+	rect.h = height_frame_;
+
+	return rect;
+}
+
+void MainObject::set_clips()
 {
 	if (width_frame_ > 0 && height_frame_ > 0)
 	{
 		int x_size = 0;
+		int w_size = width_frame_;
 		for (int i = 0; i < 8; i++)
 		{
-			frame_clip_[i].x = x_size;
+			frame_clip_[i].x = i * width_frame_;
 			frame_clip_[i].y = 0;
 			frame_clip_[i].w = width_frame_;
 			frame_clip_[i].h = height_frame_;
-			if (i < 7) { x_size += width_frame_; }
-			
+			x_size += width_frame_;
+			w_size += width_frame_;
 		}
 	}
 }
 
-void MainObject::Show(SDL_Renderer* des) // show chuyen dong 
+void MainObject::Show(SDL_Renderer* des)
 {
-	UpdateImgPlayer(des);
-	
-	if (input_type_.left_ == 1 || 
-			input_type_.right_ == 1)
+	if (on_ground_ == true)
+	{
+		if (status_ == WALK_LEFT)
+		{
+			LoadImg("images/player_left.png", des);
+		}
+		else
+		{
+			LoadImg("images/player_right.png", des);
+		}
+	}
+
+
+	if (input_type_.left_ == 1 || input_type_.right_ == 1)
 	{
 		frame_++;
 	}
@@ -74,18 +97,23 @@ void MainObject::Show(SDL_Renderer* des) // show chuyen dong
 	{
 		frame_ = 0;
 	}
+
 	if (frame_ >= 8)
 	{
 		frame_ = 0;
 	}
-	rect_.x = x_pos_ - map_x_; // trừ đi lượng bản đồ đã bị cuốn chiếu
-	rect_.y = y_pos_ - map_y_; 
 
-	SDL_Rect* current_clip = &frame_clip_[frame_];
+	if (come_back_time_ == 0)
+	{
+		rect_.x = x_pos_ - map_x_;
+		rect_.y = y_pos_ - map_y_;
 
-	SDL_Rect renderQuad = { rect_.x, rect_.y, width_frame_, height_frame_ }; // đẩy object lên trên màn hình (des) với frame vừa created
+		SDL_Rect* current_clip = &frame_clip_[frame_];
 
-	SDL_RenderCopy(des, p_object_, current_clip, &renderQuad);
+		SDL_Rect renderQuad = { rect_.x, rect_.y, width_frame_, height_frame_ };
+
+		SDL_RenderCopy(des, p_object_, current_clip, &renderQuad);
+	}
 }
 
 void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
@@ -99,7 +127,7 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 			status_ = WALK_RIGHT;
 			input_type_.right_ = 1;
 			input_type_.left_ = 0;
-			UpdateImgPlayer(screen);
+			UpdateImagePlayer(screen);
 		}
 		break;
 		case SDLK_LEFT:
@@ -107,11 +135,9 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 			status_ = WALK_LEFT;
 			input_type_.left_ = 1;
 			input_type_.right_ = 0;
-			UpdateImgPlayer(screen);
+			UpdateImagePlayer(screen);
 		}
 		break;
-		default:
-			break;
 		}
 	}
 	else if (events.type == SDL_KEYUP)
@@ -119,18 +145,18 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 		switch (events.key.keysym.sym)
 		{
 		case SDLK_RIGHT:
-			{
+		{
 			input_type_.right_ = 0;
-			}
-			break;
+		}
+		break;
 		case SDLK_LEFT:
-			{
+		{
 			input_type_.left_ = 0;
-			}
-			break;
-		
+		}
+		break;
 		}
 	}
+
 	if (events.type == SDL_MOUSEBUTTONDOWN)
 	{
 		if (events.button.button == SDL_BUTTON_RIGHT)
@@ -139,29 +165,25 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 		}
 		else if (events.button.button == SDL_BUTTON_LEFT)
 		{
-			BulletObject* p_bullet = new BulletObject(); // tao bang dan moi
-			p_bullet->set_bullet_type(BulletObject::SPHERE_BULLET);
-			p_bullet->LoadImgBullet( screen);
-			// set vi tri cho vien dan trung nhan vat
+			BulletObject* p_bullet = new BulletObject();
+			p_bullet->set_bullet_type(BulletObject::LASER_BULLET);
+			p_bullet->LoadImgBullet(screen);
 
 			if (status_ == WALK_LEFT)
 			{
 				p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
-				p_bullet->SetRect(this->rect_.x - 30, rect_.y + height_frame_ * 0.3);
+				p_bullet->SetRect(this->rect_.x, rect_.y + height_frame_ * 0.25);
 			}
 			else
 			{
 				p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
-				p_bullet->SetRect(this->rect_.x + width_frame_ - 20, rect_.y + height_frame_ * 0.3);
+				p_bullet->SetRect(this->rect_.x + width_frame_ - 20, rect_.y + height_frame_ * 0.25);
 			}
 
-			
 			p_bullet->set_x_val(20);
-			p_bullet->set_y_val(20);
 			p_bullet->set_is_move(true);
 
 			p_bullet_list_.push_back(p_bullet);
-
 		}
 	}
 }
@@ -198,6 +220,7 @@ void MainObject::RemoveBullet(const int& idx)
 	{
 		BulletObject* p_bullet = p_bullet_list_.at(idx);
 		p_bullet_list_.erase(p_bullet_list_.begin() + idx);
+
 		if (p_bullet)
 		{
 			delete p_bullet;
@@ -205,16 +228,19 @@ void MainObject::RemoveBullet(const int& idx)
 		}
 	}
 }
+
 void MainObject::DoPlayer(Map& map_data)
 {
-	if (come_back_time == 0) 
+	if (come_back_time_ == 0)
 	{
-		x_val_ = 0; // speed
-		y_val_ += 0.8;
+		x_val_ = 0;
+		y_val_ += GRAVITY_SPEED;
+
 		if (y_val_ >= MAX_FALL_SPEED)
 		{
 			y_val_ = MAX_FALL_SPEED;
 		}
+
 		if (input_type_.left_ == 1)
 		{
 			x_val_ -= PLAYER_SPEED;
@@ -223,40 +249,36 @@ void MainObject::DoPlayer(Map& map_data)
 		{
 			x_val_ += PLAYER_SPEED;
 		}
+
 		if (input_type_.jump_ == 1)
 		{
-			if (on_ground == true)
+			if (on_ground_ == true)
 			{
-				y_val_ = -PLAYER_JUMP_VALUE;
-
+				y_val_ = -PLAYER_JUMP_VAL;
 			}
-			on_ground = false;
+			on_ground_ = false;
 			input_type_.jump_ = 0;
 		}
-		CheckToMap(map_data); // kiem tra van de va cham giua map va nhan nhan vat
+
+		CheckToMap(map_data);
 		CenterEntityOnMap(map_data);
 	}
-	if (come_back_time != 0)
+
+	if (come_back_time_ > 0)
 	{
-		come_back_time--;
-		if (come_back_time == 0)
+		come_back_time_--;
+		if (come_back_time_ == 0)
 		{
-			on_ground = false; // in order to load jump right
-			if (x_pos_ > 256)
-			{
-				x_pos_ -= 256; // 4 o tile map
-			}
-			else
-			{
-				x_pos_ = 0;
-			}
+			on_ground_ = false;
+			if (x_pos_ > 256) x_pos_ -= 256;
+			else x_pos_ = 0;
 			y_pos_ = 0;
 			x_val_ = 0;
 			y_val_ = 0;
 		}
 	}
-	
 }
+
 void MainObject::CenterEntityOnMap(Map& map_data)
 {
 	map_data.start_x_ = x_pos_ - (SCREEN_WIDTH / 2);
@@ -280,27 +302,33 @@ void MainObject::CenterEntityOnMap(Map& map_data)
 	}
 }
 
-void MainObject :: CheckToMap(Map& map_data)
+void MainObject::CheckToMap(Map& map_data)
 {
-	int x1 = 0; //
-	int x2 = 0; // gioi han kiem tra theo chieu x, tu x1-> x2
+	int x1 = 0;
+	int x2 = 0;
 
 	int y1 = 0;
 	int y2 = 0;
 
-	// check horizontal
+	//Check horizontal
 	int height_min = height_frame_ < TILE_SIZE ? height_frame_ : TILE_SIZE;
+
 	x1 = (x_pos_ + x_val_) / TILE_SIZE;
 	x2 = (x_pos_ + x_val_ + width_frame_ - 1) / TILE_SIZE;
 
-	y1 = (y_pos_) / TILE_SIZE;
-	y2 = (y_pos_ + height_frame_ - 1) / TILE_SIZE;
+	y1 = y_pos_ / TILE_SIZE;
+	y2 = (y_pos_ + height_min - 1) / TILE_SIZE;
 
-	
+	/*
+			(x1,y1)				(x2,y1)
+
+
+			(x1,y2)				(x2,y2)
+	*/
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
 	{
-		if (x_val_ > 0) // object is moving to the right 
+		if (x_val_ > 0)
 		{
 
 			int val1 = map_data.tile[y1][x2];
@@ -309,33 +337,28 @@ void MainObject :: CheckToMap(Map& map_data)
 			if (val1 == STATE_MONEY || val2 == STATE_MONEY)
 			{
 				map_data.tile[y1][x2] = 0;
-				map_data.tile[y2][x2] = 0; // an xong thi bien mat
+				map_data.tile[y2][x2] = 0;
 				IncreaseMoney();
 			}
-			else
+			else if (val1 != BLANK_TILE || val2 != BLANK_TILE)
 			{
-				if (val1 != BLANK_TILE || val2 != BLANK_TILE)
-				{
-					x_pos_ = x2 * TILE_SIZE;
-					x_pos_ -= width_frame_ + 1;
-					x_val_ = 0;
-				}
+				x_pos_ = x2 * TILE_SIZE;
+				x_pos_ -= width_frame_ + 1;
+				x_val_ = 0;
 			}
 
 		}
 		else if (x_val_ < 0)
 		{
-
 			int val1 = map_data.tile[y1][x1];
 			int val2 = map_data.tile[y2][x1];
 
 			if (val1 == STATE_MONEY || val2 == STATE_MONEY)
 			{
 				map_data.tile[y1][x1] = 0;
-				map_data.tile[y2][x1] = 0; // an xong thi bien mat
+				map_data.tile[y2][x1] = 0;
 				IncreaseMoney();
 			}
-
 			else
 			{
 				if (val1 != BLANK_TILE || val2 != BLANK_TILE)
@@ -344,10 +367,10 @@ void MainObject :: CheckToMap(Map& map_data)
 					x_val_ = 0;
 				}
 			}
-
-			
 		}
 	}
+
+
 	// check vertical
 	int width_min = width_frame_ < TILE_SIZE ? width_frame_ : TILE_SIZE;
 
@@ -355,11 +378,11 @@ void MainObject :: CheckToMap(Map& map_data)
 	x2 = (x_pos_ + width_min) / TILE_SIZE;
 
 	y1 = (y_pos_ + y_val_) / TILE_SIZE;
-	y2 = (y_pos_ + y_val_ + height_frame_ - 1) / TILE_SIZE; // -1 để đề phòng trường hợp y2 tính ra nguyên trùng với ô tile
+	y2 = (y_pos_ + y_val_ + height_frame_ - 1) / TILE_SIZE;
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
 	{
-		if (y_val_ > 0) // nhan vat dang roi
+		if (y_val_ > 0)
 		{
 			int val1 = map_data.tile[y2][x1];
 			int val2 = map_data.tile[y2][x2];
@@ -370,6 +393,7 @@ void MainObject :: CheckToMap(Map& map_data)
 				map_data.tile[y2][x2] = 0;
 				IncreaseMoney();
 			}
+
 			else
 			{
 				if (val1 != BLANK_TILE || val2 != BLANK_TILE)
@@ -378,17 +402,12 @@ void MainObject :: CheckToMap(Map& map_data)
 					y_pos_ -= (height_frame_ + 1);
 					y_val_ = 0;
 
-					on_ground = true;
-					if (status_ == WALK_NONE)
-					{
-						status_ = WALK_RIGHT;
-					}
-
+					on_ground_ = true;
+					if (status_ == WALK_NONE) status_ = WALK_RIGHT;
 				}
 			}
-			
 		}
-		else if (y_val_ < 0) // nhan vat nhay len cao
+		else if (y_val_ < 0)
 		{
 			int val1 = map_data.tile[y1][x1];
 			int val2 = map_data.tile[y1][x2];
@@ -401,33 +420,33 @@ void MainObject :: CheckToMap(Map& map_data)
 			}
 			else
 			{
-				if (val1 != BLANK_TILE ||val2 != BLANK_TILE) // object tren ko trugn
+				if (val1 != BLANK_TILE || val2 != BLANK_TILE)
 				{
 					y_pos_ = (y1 + 1) * TILE_SIZE;
 					y_val_ = 0;
 				}
 			}
-			
+
 		}
 	}
-	// ko va cham
+
+
 	x_pos_ += x_val_;
 	y_pos_ += y_val_;
 
 	if (x_pos_ < 0)
 	{
-		// di het ban do
 		x_pos_ = 0;
 	}
 	else if (x_pos_ + width_frame_ > map_data.max_x_)
 	{
 		x_pos_ = map_data.max_x_ - width_frame_ - 1;
 	}
+
 	if (y_pos_ > map_data.max_y_)
 	{
-		come_back_time = 40;
+		come_back_time_ = 60;
 	}
-
 }
 
 void MainObject::IncreaseMoney()
@@ -435,33 +454,29 @@ void MainObject::IncreaseMoney()
 	money_count++;
 }
 
-void MainObject::UpdateImgPlayer(SDL_Renderer* des) 
+void MainObject::UpdateImagePlayer(SDL_Renderer* des)
 {
-	if (on_ground == true)
-	{
-		/* dùng status dể kiểm tra trạng thái vì nếu dùng input_type, khi tả nhả phím
-		(SDL_KEYUP thì input type lập tức về 0, trong khi status thì giữ nguyên ( quay sang trái
-		*/
-		if (status_ == WALK_LEFT)
-		{
-			LoadImg("img/player_left.png", des);
-		}
-		else
-		{
-			LoadImg("img/player_right.png", des);
-		}
-	}
-	else // trên không 
+	if (on_ground_ == true)
 	{
 		if (status_ == WALK_LEFT)
 		{
-			LoadImg("img/jump_left.png", des);
+			LoadImg("images/player_left.png", des);
 		}
 		else
 		{
-			LoadImg("img/jump_right.png", des);
+			LoadImg("images/player_right.png", des);
 		}
 	}
-
+	else
+	{
+		if (status_ == WALK_LEFT)
+		{
+			LoadImg("images/jump_left.png", des);
+		}
+		else
+		{
+			LoadImg("images/jump_right.png", des);
+		}
+	}
 
 }
