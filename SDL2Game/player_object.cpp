@@ -138,6 +138,8 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 			UpdateImagePlayer(screen);
 		}
 		break;
+		default:
+			break;
 		}
 	}
 	else if (events.type == SDL_KEYUP)
@@ -458,9 +460,11 @@ void MainObject::UpdateImagePlayer(SDL_Renderer* des)
 {
 	if (on_ground_ == true)
 	{
+	/* dùng status dể kiểm tra trạng thái vì nếu dùng input_type, khi tả nhả phím (SDL_KEYUP thì 
+			input type lập tức về 0, trong khi status thì giữ nguyên ( quay sang trái */
 		if (status_ == WALK_LEFT)
 		{
-			LoadImg("images/player_left.png", des);
+			LoadImg("images/player_left.png", des);   
 		}
 		else
 		{

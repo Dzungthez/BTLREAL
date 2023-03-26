@@ -273,20 +273,20 @@ void ThreatsObject::ImpMoveType(SDL_Renderer* screen)
 			{
 				input_type_.left_ = 1;
 				input_type_.right_ = 0;
-				LoadImg("images/threat_left.png", screen);
+				LoadImg("images/thread_left.png", screen);
 			}
 			else if (x_pos_ < animation_a_)
 			{
 				input_type_.left_ = 0;
 				input_type_.right_ = 1;
-				LoadImg("images/threat_right.png", screen);
+				LoadImg("images/thread_right.png", screen);
 			}
 		}
 		else
 		{
 			if (input_type_.left_ == 1)
 			{
-				LoadImg("images/threat_left.png", screen);
+				LoadImg("images/thread_left.png", screen);
 			}
 		}
 	}
