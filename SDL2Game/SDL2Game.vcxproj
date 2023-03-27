@@ -89,6 +89,7 @@
     <ClInclude Include="game_map.h" />
     <ClInclude Include="ImpTimer.h" />
     <ClInclude Include="player_object.h" />
+    <ClInclude Include="player_power.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextObject.h" />

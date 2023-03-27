@@ -197,10 +197,23 @@ void MainObject::HandleBullet(SDL_Renderer* des)
 		BulletObject* p_bullet = p_bullet_list_.at(i);
 		if (p_bullet != NULL)
 		{
-			if (p_bullet->get_is_move() == true)
+			if (p_bullet->get_is_move())
 			{
-				p_bullet->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
-				p_bullet->Render(des);
+				int bullet_distance = rect_.x + SCREEN_WIDTH / 2 - p_bullet->GetRect().x;
+				if (bullet_distance < 610 && bullet_distance > 0)
+				{
+					p_bullet->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
+					p_bullet->Render(des);
+				}
+				else if (bullet_distance >= 610 && bullet_distance < 1216)
+				{
+					p_bullet->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
+					p_bullet->Render(des);
+				}
+				else if (bullet_distance >= 1216 || bullet_distance <= 0)
+				{
+					p_bullet->set_is_move(false);
+				}
 			}
 			else
 			{
