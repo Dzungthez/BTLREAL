@@ -76,18 +76,7 @@ void MainObject::set_clips()
 
 void MainObject::Show(SDL_Renderer* des)
 {
-	if (on_ground_ == true)
-	{
-		if (status_ == WALK_LEFT)
-		{
-			LoadImg("images/player_left.png", des);
-		}
-		else
-		{
-			LoadImg("images/player_right.png", des);
-		}
-	}
-
+	UpdateImagePlayer(des);
 
 	if (input_type_.left_ == 1 || input_type_.right_ == 1)
 	{

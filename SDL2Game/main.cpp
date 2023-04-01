@@ -7,6 +7,8 @@
 #include "ThreatsObject.h"
 #include "ExplosionObject.h"
 #include "TextObject.h"
+#include "player_power.h"
+#include "Geometric.h"
 
 TTF_Font *font_time = NULL;
 BaseObject g_background;
@@ -162,6 +164,13 @@ int main(int argc, char* argv[])
 	p_player.LoadImg("images/player_right.png", gScreen);
 	p_player.set_clips();
 
+	PlayerPower player_power;
+	player_power.Init(gScreen);
+
+	PlayerMoney player_money;
+	player_money.Init(gScreen);
+	player_money.SetPos(SCREEN_WIDTH/2 - 300, 4);
+
 	vector<ThreatsObject*> threats_list = MakeThreatList();
 
 	ExplosionObject exp_threat;
@@ -214,7 +223,7 @@ int main(int argc, char* argv[])
 		SDL_RenderClear(gScreen);
 
 		g_background.Render(gScreen, NULL);
-		game_map.DrawMap(gScreen);
+		
 
 		Map map_data = game_map.getMap();
 
@@ -226,6 +235,21 @@ int main(int argc, char* argv[])
 
 		game_map.SetMap(map_data);
 		game_map.DrawMap(gScreen);
+
+		// ve hinh hoc
+		GeometricFormat rectangle_size(0, 0, SCREEN_WIDTH, 40);
+		ColorData color_data(36, 80, 150);
+		Geometric::RenderRectangle(rectangle_size, color_data, gScreen);
+
+		GeometricFormat outlineSize(1, 1, SCREEN_WIDTH -1, 38);	
+
+		ColorData color_data2(150, 0, 0);
+
+		Geometric :: RenderOutline(outlineSize, color_data2, gScreen);
+
+
+		player_power.Show(gScreen);
+		player_money.Show(gScreen);
 
 		for (int i = 0; i < threats_list.size(); i++)
 		{
@@ -280,6 +304,8 @@ int main(int argc, char* argv[])
 						p_player.SetRect(0, 0);
 						p_player.set_comeback_time(60);
 						SDL_Delay(1000);
+						player_power.Decrease();
+						player_power.Render(gScreen);
 						continue;
 						
 					}

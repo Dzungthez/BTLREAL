@@ -87,6 +87,7 @@
     <ClInclude Include="CommonFunc.h" />
     <ClInclude Include="ExplosionObject.h" />
     <ClInclude Include="game_map.h" />
+    <ClInclude Include="Geometric.h" />
     <ClInclude Include="ImpTimer.h" />
     <ClInclude Include="player_object.h" />
     <ClInclude Include="player_power.h" />
@@ -101,9 +102,11 @@
     <ClCompile Include="CommonFunc.cpp" />
     <ClCompile Include="ExplosionObject.cpp" />
     <ClCompile Include="game_map.cpp" />
+    <ClCompile Include="Geometric.cpp" />
     <ClCompile Include="ImpTimer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player_object.cpp" />
+    <ClCompile Include="play_power.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
