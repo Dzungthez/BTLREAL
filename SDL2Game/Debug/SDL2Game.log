@@ -1,6 +1,58 @@
-﻿  main.cpp
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(47): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
-c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(59): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
+﻿  ThreatsObject.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(48): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(60): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(67): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(68): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(86): warning C4305: '+=' : truncation from 'double' to 'float'
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(170): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(171): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(173): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(174): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(193): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(206): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(216): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(217): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(219): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(220): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(231): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(245): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(261): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(314): warning C4244: 'argument' : conversion from 'float' to 'const int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(323): warning C4018: '<' : signed/unsigned mismatch
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\threatsobject.cpp(345): warning C4244: 'argument' : conversion from 'float' to 'const int', possible loss of data
+  Generating Code...
+  Compiling...
+  player_object.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(48): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(60): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(97): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(98): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(166): warning C4244: 'argument' : conversion from 'double' to 'const int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(171): warning C4244: 'argument' : conversion from 'double' to 'const int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(184): warning C4018: '<' : signed/unsigned mismatch
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(241): warning C4305: '+=' : truncation from 'double' to 'float'
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(288): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(298): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(320): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(321): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(323): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(324): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(349): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(370): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(381): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(382): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(384): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(385): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(405): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(429): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\player_object.cpp(447): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+  play_power.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(48): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(60): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\play_power.cpp(38): warning C4018: '<' : signed/unsigned mismatch
+  main.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(48): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(60): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
 c:\users\dzung nguyen\desktop\sdl2game\sdl2game\geometric.h(20): warning C4091: 'typedef ' : ignored on left of 'GeometricFormat' when no variable is declared
 c:\users\dzung nguyen\desktop\sdl2game\sdl2game\geometric.h(34): warning C4091: 'typedef ' : ignored on left of 'ColorData' when no variable is declared
 c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(109): warning C4244: 'argument' : conversion from 'int' to 'const float', possible loss of data
@@ -18,4 +70,34 @@ c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(359): warning C4244: 'i
 c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(404): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
 c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(411): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
 c:\users\dzung nguyen\desktop\sdl2game\sdl2game\main.cpp(429): warning C4018: '<' : signed/unsigned mismatch
+  game_map.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(48): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(60): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
+  TextObject.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(48): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(60): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
+  ImpTimer.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(48): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(60): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\imptimer.cpp(35): warning C4553: '==' : operator has no effect; did you intend '='?
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\imptimer.cpp(44): warning C4553: '==' : operator has no effect; did you intend '='?
+  Geometric.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(48): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(60): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\geometric.h(20): warning C4091: 'typedef ' : ignored on left of 'GeometricFormat' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\geometric.h(34): warning C4091: 'typedef ' : ignored on left of 'ColorData' when no variable is declared
+  ExplosionObject.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(48): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(60): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
+  CommonFunc.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(48): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(60): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
+  BulletObject.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(48): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(60): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
+  BaseObject.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(48): warning C4091: 'typedef ' : ignored on left of 'Input' when no variable is declared
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\commonfunc.h(60): warning C4091: 'typedef ' : ignored on left of 'Map' when no variable is declared
+  Generating Code...
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\textobject.cpp(31): warning C4715: 'TextObject::LoadFromRenderText' : not all control paths return a value
   SDL2Game.vcxproj -> C:\Users\DZUNG NGUYEN\Desktop\SDL2Game\Debug\SDL2Game.exe

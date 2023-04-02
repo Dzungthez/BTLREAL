@@ -127,7 +127,15 @@ void ThreatsObject::InitThreats()
 	}
 	y_pos_ = 0;
 	come_back_time_ = 0;
-	input_type_.left_ = 1;
+	if (type_move_ == STATIC_THREAT)
+	{
+		input_type_.left_ = 0;
+	}
+	else if (type_move_ == MOVE_IN_SPACE_THREAT)
+	{
+		input_type_.left_ = 1;
+	}
+	
 }
 
 

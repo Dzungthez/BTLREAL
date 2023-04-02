@@ -21,10 +21,7 @@ public:
 		STATIC_THREAT = 0,
 		MOVE_IN_SPACE_THREAT = 1,
 
-
-
 	};
-
 
 	void set_x_val(const float& xVal) { x_val_ = xVal; }
 	void set_y_val(const float& yVal) { y_val_ = yVal; }
@@ -50,6 +47,7 @@ public:
 	void InitThreats();
 
 	void set_type_move(const int& typeMove) { type_move_ = typeMove; }
+	int get_type_move() const{return type_move_;}
 	void SetAnimationPos(const int& pos_a, const int& pos_b) { animation_a_ = pos_a, animation_b_ = pos_b; }
 	void set_input_left(const int& ipLeft) { input_type_.left_ = ipLeft; }
 	void ImpMoveType(SDL_Renderer* screen);

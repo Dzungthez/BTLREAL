@@ -94,7 +94,7 @@ void MainObject::Show(SDL_Renderer* des)
 
 	if (come_back_time_ == 0)
 	{
-		rect_.x = x_pos_ - map_x_;
+		rect_.x = x_pos_ - map_x_; // tru di map_x_ de lay vi tri cua player trong map
 		rect_.y = y_pos_ - map_y_;
 
 		SDL_Rect* current_clip = &frame_clip_[frame_];
@@ -188,7 +188,7 @@ void MainObject::HandleBullet(SDL_Renderer* des)
 		{
 			if (p_bullet->get_is_move())
 			{
-				int bullet_distance = rect_.x + SCREEN_WIDTH / 2 - p_bullet->GetRect().x;
+				int bullet_distance = rect_.x + SCREEN_WIDTH / 2 - p_bullet->GetRect().x; //( vi tri cua bullet trong map - vi tri cua player trong map)
 				if (bullet_distance < 610 && bullet_distance > 0)
 				{
 					p_bullet->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
