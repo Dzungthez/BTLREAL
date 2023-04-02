@@ -4,6 +4,7 @@
 #include "BaseObject.h"
 #include "CommonFunc.h"
 
+
 class BulletObject : public BaseObject
 {
 public:
@@ -39,7 +40,7 @@ public:
 	unsigned int get_bullet_type() const { return bullet_type_; }
 
 	void HandleMove(const int& x_border, const int& y_border);
-	bool LoadImgBullet(SDL_Renderer* des);
+	bool LoadImgBullet(SDL_Renderer* des, int status_);
 
 private:
 	int x_val_;

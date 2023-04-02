@@ -305,7 +305,7 @@ void ThreatsObject::InitBullet(BulletObject* p_bullet, SDL_Renderer* screen)
 	if (p_bullet != NULL)
 	{
 		p_bullet->set_bullet_type(BulletObject::LASER_BULLET);
-		bool ret = p_bullet->LoadImgBullet(screen);
+		bool ret = p_bullet->LoadImgBullet(screen, 1);
 
 		if (ret)
 		{
@@ -327,10 +327,10 @@ void ThreatsObject::MakeBullet(SDL_Renderer* screen, const int& x_limit, const i
 		{
 			if (p_bullet->get_is_move())
 			{
-				int bullet_distance = rect_.x + width_frame_ - p_bullet->GetRect().x;
+				int bullet_distance = rect_.x + width_frame_ - p_bullet->GetRect().x; // khoang cach giua vien dan va threat
 				if (bullet_distance < 500 && bullet_distance > 0)
 				{
-					p_bullet->HandleMove(x_limit, y_limit);
+					p_bullet->HandleMove(bullet_distance, y_limit);
 					p_bullet->Render(screen);
 				}
 				else

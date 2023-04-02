@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "BulletObject.h"
 
+
 BulletObject::BulletObject()
 {
 	x_val_ = 0;
@@ -14,7 +15,7 @@ BulletObject::~BulletObject()
 
 }
 
-bool BulletObject::LoadImgBullet(SDL_Renderer* des)
+bool BulletObject::LoadImgBullet(SDL_Renderer* des, int status_)
 {
 	bool ret = false;
 	if (bullet_type_ == LASER_BULLET)
@@ -23,7 +24,10 @@ bool BulletObject::LoadImgBullet(SDL_Renderer* des)
 	}
 	else
 	{
-		ret = LoadImg("images/sphere_bullet.png", des);
+		if (status_ == 0)
+			ret = LoadImg("images/sphere_bullet_right.png", des);
+		else if (status_ == 1)
+			ret = LoadImg("images/sphere_bullet_left.png", des);
 	}
 	return ret;
 }
