@@ -53,7 +53,7 @@ public:
 	void SetAnimationPos(const int& pos_a, const int& pos_b) { animation_a_ = pos_a, animation_b_ = pos_b; }
 	void set_input_left(const int& ipLeft) { input_type_.left_ = ipLeft; }
 	void ImpMoveType(SDL_Renderer* screen);
-
+	
 	SDL_Rect GetRectFrame();
 
 	vector<BulletObject*> get_bullet_list() const { return bullet_list_; }
@@ -64,8 +64,10 @@ public:
 	void RemoveBullet(const int& idx);
 	bool CheckBulletToMap(const vector<BulletObject*>& bullet_list, Map& gMap);
 	bool CheckCollision(const SDL_Rect& rect1, const int& x1, const int& y1, const int& x2, const int& y2);
-	bool CheckDistanceThreat_Player(const SDL_Rect& rect_player, const SDL_Rect&rect_threat, SDL_Renderer* screen);
+	void CheckDistanceThreat_Player(const SDL_Rect& rect_player, const SDL_Rect&rect_threat, SDL_Renderer* screen);
 	void UpdateStaticThreatImg(SDL_Renderer *screen);
+
+	bool check_allow_shoot() const { return allow_shoot; }
 
 
 private:
@@ -94,6 +96,8 @@ private:
 
 	int static_status;
 	vector<BulletObject*> bullet_list_;
+
+	bool allow_shoot;
 };
 
 #endif // !THREATS_OBJECT_H_

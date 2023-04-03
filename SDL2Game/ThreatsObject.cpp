@@ -20,6 +20,7 @@ ThreatsObject::ThreatsObject()
 	collide_left = false;
 	collide_right = false;
 	static_status = STATIC_LEFT;
+	allow_shoot = false;
 }
 
 ThreatsObject::~ThreatsObject()
@@ -335,7 +336,7 @@ void ThreatsObject::InitBullet(BulletObject* p_bullet, SDL_Renderer* screen)
 
 		if (ret)
 		{
-			p_bullet->set_is_move(true);
+			p_bullet->set_is_move(false);
 			p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
 			p_bullet->SetRect(rect_.x + 5, y_pos_ + 10);
 			p_bullet->set_x_val(15);
@@ -354,64 +355,68 @@ void ThreatsObject::UpdateStaticThreatImg(SDL_Renderer* screen)
 		LoadImg("images//threats1_right.png", screen);
 	}
 }
-bool ThreatsObject::CheckDistanceThreat_Player(const SDL_Rect &rect_player,const  SDL_Rect& rect_threat, SDL_Renderer* screen)
+void ThreatsObject::CheckDistanceThreat_Player(const SDL_Rect &rect_player,const  SDL_Rect& rect_threat, SDL_Renderer* screen)
 {
 	if (type_move_ == MOVE_IN_SPACE_THREAT)
 	{
-		return false;
+		return;
 	}
 	int x_distance = rect_player.x - rect_threat.x;
-	int y_distance = rect_player.y - rect_threat.y;
 	if (x_distance < 0 && x_distance > -320) // nhan vat o ben trai threat
 	{
 		static_status = STATIC_LEFT;
+		allow_shoot = true;
 		UpdateStaticThreatImg(screen);
-		return true;
+		
 	}
 	else if (x_distance >= 0 && x_distance < 320) // nhan vat o ben phai threat
 	{
 		static_status = STATIC_RIGHT;
+		allow_shoot = true;
 		UpdateStaticThreatImg(screen);
 
-		return true;
 	}
-	
-	return false;
+	else
+	{
+		allow_shoot = false;
+	}
+
 }
 
 void ThreatsObject::MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit)
 {
-	for (int i = 0; i < bullet_list_.size(); i++)
-	{
-		BulletObject* p_bullet = bullet_list_.at(i);
-
-		if (p_bullet != NULL)
+		for (int i = 0; i < bullet_list_.size(); i++)
 		{
-			
-			if (p_bullet->get_is_move())
-			{
-				if (static_status == STATIC_LEFT) p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
-				else if (static_status == STATIC_RIGHT) p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
+			BulletObject* p_bullet = bullet_list_.at(i);
 
-				int bullet_distance = rect_.x + width_frame_ - p_bullet->GetRect().x; // khoang cach giua vien dan va threat
-				if (bullet_distance < 1000 && bullet_distance > 0)
+			if (p_bullet != NULL)
+			{
+				if (p_bullet->get_is_move())
 				{
-					p_bullet->HandleMove(bullet_distance, y_limit);
-					p_bullet->Render(screen);
+					if (static_status == STATIC_LEFT) p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
+					else if (static_status == STATIC_RIGHT) p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
+
+					int bullet_distance = rect_.x + width_frame_ - p_bullet->GetRect().x; // khoang cach giua vien dan va threat
+					if (bullet_distance < 500 && bullet_distance > 0)
+					{
+						p_bullet->HandleMove(bullet_distance, y_limit);
+						p_bullet->Render(screen);
+					}
+					else
+					{
+						p_bullet->set_is_move(false);
+					}
+
 				}
 				else
 				{
-					p_bullet->set_is_move(false);
+					p_bullet->set_is_move(true);
+					p_bullet->SetRect(rect_.x + 5, y_pos_ + 10);
 				}
-
-			}
-			else
-			{
-				p_bullet->set_is_move(true);
-				p_bullet->SetRect(rect_.x + 5, y_pos_ + 10);
 			}
 		}
-	}
+	
+	
 }
 
 

@@ -11,6 +11,7 @@
 #include "Geometric.h"
 
 TTF_Font *font_time = NULL;
+TTF_Font* g_font_MENU = NULL;
 BaseObject g_background;
 bool init()
 {
@@ -65,6 +66,9 @@ bool init()
 			}
 		}
 		font_time = TTF_OpenFont("font//dlxfont_.ttf", 15);
+		g_font_MENU = TTF_OpenFont("font/dlxfont_.ttf", 80);
+		if (g_font_MENU == NULL) return false; // menu font
+
 		if (font_time == NULL)
 		{
 			success = false;
@@ -166,6 +170,9 @@ int main(int argc, char* argv[])
 		cout << "Couldn't load background \n" << SDL_GetError();
 		return -1;
 	}
+
+	again_label:
+
 	GameMap game_map;
 	game_map.LoadMap("images/map.dat");
 	game_map.LoadTiles(gScreen);
@@ -215,6 +222,13 @@ int main(int argc, char* argv[])
 	money_game.SetColor(TextObject::WHITE_TEXT);
 
 	bool quit = false;
+
+	int ret_menu = SDLCommonFunc::ShowMenu(gScreen, g_font_MENU, "Play Game", "Exit", "images//MENU.png");
+	if (ret_menu == 1)
+	{
+		cout << "could not load menu img \n";
+		quit = true;
+	}
 	while (!quit)
 	{
 		fps_timer.start();
@@ -270,7 +284,7 @@ int main(int argc, char* argv[])
 				p_threat->ImpMoveType(gScreen);
 				p_threat->DoPlayer(map_data);
 				// threat chi ban trong tam nhin cua no
-		
+				
 				p_threat->MakeBullet(gScreen, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 				p_threat->Show(gScreen);
@@ -286,6 +300,7 @@ int main(int argc, char* argv[])
 						bCol1 = SDLCommonFunc::CheckCollision(pt_bullet->GetRect(), rect_player);
 						if (bCol1)
 						{	
+							//p_threat->RemoveBullet(jj);
 							break;
 						}
 					}
@@ -323,13 +338,26 @@ int main(int argc, char* argv[])
 					}
 					else
 					{
-						if (MessageBox(NULL, L"GAME OVER", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+						Sleep(500);
+						int ret_menu = SDLCommonFunc::ShowMenu(gScreen, g_font_MENU,
+							"Play Again", "Exit",
+							"img//MENU END.png");
+						if (ret_menu == 1)
 						{
-							p_threat->Free();
+							quit = true;
+							continue;
+						}
+						else
+						{
+							quit = false;
+							goto again_label;
+						}
+						/*p_threat->Free();
 							close();
 							SDL_Quit();
-							return 0;
-						}
+							return 0;*/
+
+					
 					}
 					
 				}
@@ -390,11 +418,14 @@ int main(int argc, char* argv[])
 
 		if (val_time <= 0)
 		{
-			if (MessageBox(NULL, L"GAME OVER", L"Info", MB_OK | MB_ICONSTOP) == IDOK)
+			Sleep(500);
+			int ret_menu = SDLCommonFunc::ShowMenu(gScreen, g_font_MENU,
+				"Play Again", "Exit",
+				"img//MENU END.png");
+			if (ret_menu == 1)
 			{
 				quit = true;
-				break;
-				return 0;
+				continue;
 			}
 			
 		}

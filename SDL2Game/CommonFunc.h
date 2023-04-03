@@ -10,6 +10,8 @@
 #include <SDL_ttf.h>
 #include <stdio.h>
 #include <iostream>
+#include "TextObject.h"
+#include "BaseObject.h"
 
 using namespace std;
 
@@ -67,6 +69,10 @@ typedef struct Map
 namespace SDLCommonFunc
 {
 	bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
+	int ShowMenu(SDL_Renderer* gScreen, TTF_Font* font,
+		const std::string& menu1,
+		const std::string& menu2,
+		const std::string& img_name);
 }
 
 
