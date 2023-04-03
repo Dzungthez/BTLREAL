@@ -28,7 +28,10 @@ public:
 	bool LoadImg(string path, SDL_Renderer* screen);
 	void Show(SDL_Renderer* des);
 
-	void HandleInputAction(SDL_Event events, SDL_Renderer* screen);
+	void HandleInputAction(SDL_Event events, SDL_Renderer* screen, 
+		Mix_Chunk* bullet_sound[2], Mix_Chunk* jump_sound);
+
+	
 	void set_clips();
 
 	void DoPlayer(Map& map_data);

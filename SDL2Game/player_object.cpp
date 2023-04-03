@@ -105,7 +105,7 @@ void MainObject::Show(SDL_Renderer* des)
 	}
 }
 
-void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
+void MainObject :: HandleInputAction(SDL_Event events, SDL_Renderer* screen, Mix_Chunk* bullet_sound[2], Mix_Chunk* jump_sound)
 {
 	if (events.type == SDL_KEYDOWN)
 	{
@@ -153,11 +153,13 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen)
 		if (events.button.button == SDL_BUTTON_RIGHT)
 		{
 			input_type_.jump_ = 1;
+			Mix_PlayChannel(-1, jump_sound, 0);
 		}
 		else if (events.button.button == SDL_BUTTON_LEFT)
 		{
 			BulletObject* p_bullet = new BulletObject();
 			p_bullet->set_bullet_type(BulletObject::SPHERE_BULLET);
+			Mix_PlayChannel(-1, bullet_sound[0], 0);
 			
 			if (status_ == WALK_LEFT)
 			{
@@ -195,12 +197,12 @@ void MainObject::HandleBullet(SDL_Renderer* des)
 					p_bullet->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
 					p_bullet->Render(des);
 				}
-				else if (bullet_distance >= 610 && bullet_distance < 1216)
+				else if (bullet_distance >= 610 && bullet_distance < 1216) // ban sang phai
 				{
 					p_bullet->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
 					p_bullet->Render(des);
 				}
-				else if (bullet_distance >= 1216 || bullet_distance <= 0)
+				else if (bullet_distance >= 1216 || bullet_distance <= 0) // ban sang trai
 				{
 					p_bullet->set_is_move(false);
 				}

@@ -69,6 +69,16 @@ bool init()
 		{
 			success = false;
 		}
+		if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) return false;
+
+		// read files wav audio
+		g_sound_bullet[0] = Mix_LoadWAV("sound/Gun+Silencer.wav");
+		g_sound_bullet[1] = Mix_LoadWAV("sound/Gun+Shot2.wav");
+		g_sound_explosion[0] = Mix_LoadWAV("sound/Gun+357+Magnum.wav");
+		g_sound_jump = Mix_LoadWAV("sound/cartoon-jump-6462.wav");
+
+		if (g_sound_bullet[0] == NULL || g_sound_bullet[1] == NULL || g_sound_explosion == NULL) return false;
+
 	}
 
 	return success;
@@ -125,7 +135,7 @@ vector<ThreatsObject*> MakeThreatList()
 		ThreatsObject* p_threat = threats_objs + i;
 		if (p_threat != NULL)
 		{
-			p_threat->LoadImg("images/threats1.png", gScreen);
+			p_threat->LoadImg("images/threats1_left.png", gScreen);
 			p_threat->set_clips();
 			p_threat->set_x_pos(700 + i * 1200);
 			p_threat->set_y_pos(250);
@@ -215,7 +225,7 @@ int main(int argc, char* argv[])
 				quit = true;
 			}
 
-			p_player.HandleInputAction(e, gScreen);
+			p_player.HandleInputAction(e, gScreen, g_sound_bullet, g_sound_jump);
 		}
 
 		SDL_SetRenderDrawColor(gScreen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
@@ -259,13 +269,15 @@ int main(int argc, char* argv[])
 				p_threat->SetMapXY(map_data.start_x_, map_data.start_y_);
 				p_threat->ImpMoveType(gScreen);
 				p_threat->DoPlayer(map_data);
+				// threat chi ban trong tam nhin cua no
+		
 				p_threat->MakeBullet(gScreen, SCREEN_WIDTH, SCREEN_HEIGHT);
-				p_threat->Show(gScreen);
 
+				p_threat->Show(gScreen);
 
 				SDL_Rect rect_player = p_player.GetRectFrame();
 				bool bCol1 = false;
-				vector<BulletObject*> tBuller_list = p_threat->get_bullet_list();
+				std :: vector<BulletObject*> tBuller_list = p_threat->get_bullet_list();
 				for (int jj = 0; jj < tBuller_list.size(); ++jj)
 				{
 					BulletObject* pt_bullet = tBuller_list.at(jj);
@@ -273,8 +285,7 @@ int main(int argc, char* argv[])
 					{
 						bCol1 = SDLCommonFunc::CheckCollision(pt_bullet->GetRect(), rect_player);
 						if (bCol1)
-						{
-							p_threat->RemoveBullet(jj);
+						{	
 							break;
 						}
 					}
@@ -285,6 +296,7 @@ int main(int argc, char* argv[])
 
 				if (bCol1 || bCol2)
 				{
+					Mix_PlayChannel(-1, g_sound_explosion[0], 0);
 					int width_exp_frame = exp_main.get_frame_width();
 					int height_exp_frame = exp_main.get_frame_heigth();
 					for (int ex = 0; ex < NUM_FRAME_EXP; ex++)
@@ -351,6 +363,7 @@ int main(int argc, char* argv[])
 						bool bCol = SDLCommonFunc::CheckCollision(bRect, tRect);
 						if (bCol)
 						{
+							Mix_PlayChannel(-1, g_sound_explosion[0], 0);
 							mark_value += 5;
 							for (int ex = 0; ex < NUM_FRAME_EXP; ex++)
 							{

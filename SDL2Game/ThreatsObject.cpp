@@ -17,6 +17,9 @@ ThreatsObject::ThreatsObject()
 	animation_b_ = 0;
 	input_type_.left_ = 0;
 	type_move_ = STATIC_THREAT;
+	collide_left = false;
+	collide_right = false;
+	static_status = STATIC_LEFT;
 }
 
 ThreatsObject::~ThreatsObject()
@@ -64,7 +67,7 @@ void ThreatsObject::Show(SDL_Renderer* des)
 {
 	if (come_back_time_ == 0)
 	{
-		rect_.x = x_pos_ - map_x_;
+		rect_.x = x_pos_ - map_x_; //
 		rect_.y = y_pos_ - map_y_;
 		frame_++;
 		if (frame_ >= 8)
@@ -182,7 +185,7 @@ void ThreatsObject::CheckToMap(Map& map_data)
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
 	{
-		if (x_val_ > 0)
+		if (x_val_ > 0) // di sang phai
 		{
 
 			int val1 = map_data.tile[y1][x2];
@@ -193,10 +196,14 @@ void ThreatsObject::CheckToMap(Map& map_data)
 				x_pos_ = x2 * TILE_SIZE;
 				x_pos_ -= width_frame_ + 1;
 				x_val_ = 0;
+				input_type_.right_ = 0;
+				input_type_.left_ = 1;
+				collide_right = true;
+				collide_left = false;
 			}
 
 		}
-		else if (x_val_ < 0)
+		else if (x_val_ < 0) // di sang trai
 		{
 			int val1 = map_data.tile[y1][x1];
 			int val2 = map_data.tile[y2][x1];
@@ -205,6 +212,10 @@ void ThreatsObject::CheckToMap(Map& map_data)
 			{
 				x_pos_ = (x1 + 1) * TILE_SIZE;
 				x_val_ = 0;
+				input_type_.left_ = 0;
+				input_type_.right_ = 1;
+				collide_left = true;
+				collide_right = false;
 			}
 		}
 	}
@@ -277,7 +288,22 @@ void ThreatsObject::ImpMoveType(SDL_Renderer* screen)
 	{
 		if (on_ground_ == true)
 		{
-			if (x_pos_ > animation_b_)
+			// collide map then change direction
+			if (x_pos_ >= animation_a_ && x_pos_ <= animation_b_)
+			{
+				if (collide_left)
+				{
+					LoadImg("images//thread_right.png", screen);
+					collide_left = false;
+				}
+				else if (collide_right)
+				{
+					collide_right = false;
+					LoadImg("images//thread_left.png", screen);
+				}
+			}
+			// if exceed the range then change direction
+			else if (x_pos_ > animation_b_)
 			{
 				input_type_.left_ = 1;
 				input_type_.right_ = 0;
@@ -317,18 +343,58 @@ void ThreatsObject::InitBullet(BulletObject* p_bullet, SDL_Renderer* screen)
 		}
 	}
 }
+void ThreatsObject::UpdateStaticThreatImg(SDL_Renderer* screen)
+{
+	if (static_status == STATIC_LEFT)
+	{
+		LoadImg("images//threats1_left.png", screen);
+	}
+	else if (static_status == STATIC_RIGHT)
+	{
+		LoadImg("images//threats1_right.png", screen);
+	}
+}
+bool ThreatsObject::CheckDistanceThreat_Player(const SDL_Rect &rect_player,const  SDL_Rect& rect_threat, SDL_Renderer* screen)
+{
+	if (type_move_ == MOVE_IN_SPACE_THREAT)
+	{
+		return false;
+	}
+	int x_distance = rect_player.x - rect_threat.x;
+	int y_distance = rect_player.y - rect_threat.y;
+	if (x_distance < 0 && x_distance > -320) // nhan vat o ben trai threat
+	{
+		static_status = STATIC_LEFT;
+		UpdateStaticThreatImg(screen);
+		return true;
+	}
+	else if (x_distance >= 0 && x_distance < 320) // nhan vat o ben phai threat
+	{
+		static_status = STATIC_RIGHT;
+		UpdateStaticThreatImg(screen);
+
+		return true;
+	}
+	
+	return false;
+}
 
 void ThreatsObject::MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit)
 {
 	for (int i = 0; i < bullet_list_.size(); i++)
 	{
 		BulletObject* p_bullet = bullet_list_.at(i);
+
 		if (p_bullet != NULL)
 		{
+			
 			if (p_bullet->get_is_move())
 			{
+				if (static_status == STATIC_LEFT) p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
+				else if (static_status == STATIC_RIGHT) p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
+
 				int bullet_distance = rect_.x + width_frame_ - p_bullet->GetRect().x; // khoang cach giua vien dan va threat
-				if (bullet_distance < 500 && bullet_distance > 0)
+				if (bullet_distance < 1000 && bullet_distance > 0)
 				{
 					p_bullet->HandleMove(bullet_distance, y_limit);
 					p_bullet->Render(screen);
@@ -347,3 +413,6 @@ void ThreatsObject::MakeBullet(SDL_Renderer* screen, const int& x_limit, const i
 		}
 	}
 }
+
+
+

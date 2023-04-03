@@ -10,6 +10,7 @@
 #include <SDL_ttf.h>
 #include <stdio.h>
 #include <iostream>
+
 using namespace std;
 
 static SDL_Window* gWindow = NULL;
@@ -28,6 +29,10 @@ const int COLOR_KEY_G = 175;
 const int COLOR_KEY_B = 180;
 
 const int RENDER_DRAW_COLOR = 0xff;
+
+static Mix_Chunk* g_sound_bullet[2];
+static Mix_Chunk* g_sound_explosion[2];
+static Mix_Chunk* g_sound_jump;
 
 #define TILE_SIZE 64
 
@@ -63,5 +68,6 @@ namespace SDLCommonFunc
 {
 	bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
 }
+
 
 #endif

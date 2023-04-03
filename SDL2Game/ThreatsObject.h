@@ -9,6 +9,8 @@
 #define THREAT_GRAVITY_SPEED 0.8
 #define THREAT_FRAME_NUM 8
 #define THREAT_SPEED 3
+#define STATIC_LEFT 100
+#define STATIC_RIGHT 200
 
 class ThreatsObject : public BaseObject
 {
@@ -60,6 +62,11 @@ public:
 	void InitBullet(BulletObject* p_bullet, SDL_Renderer* screen);
 	void MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit);
 	void RemoveBullet(const int& idx);
+	bool CheckBulletToMap(const vector<BulletObject*>& bullet_list, Map& gMap);
+	bool CheckCollision(const SDL_Rect& rect1, const int& x1, const int& y1, const int& x2, const int& y2);
+	bool CheckDistanceThreat_Player(const SDL_Rect& rect_player, const SDL_Rect&rect_threat, SDL_Renderer* screen);
+	void UpdateStaticThreatImg(SDL_Renderer *screen);
+
 
 private:
 
@@ -82,6 +89,10 @@ private:
 	int animation_b_;
 	Input input_type_;
 
+	bool collide_left;
+	bool collide_right;
+
+	int static_status;
 	vector<BulletObject*> bullet_list_;
 };
 
