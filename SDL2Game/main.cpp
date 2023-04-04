@@ -76,6 +76,9 @@ bool init()
 		if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) return false;
 
 		// read files wav audio
+		g_music = Mix_LoadMUS("sound/music.mp3");
+		if (g_music == NULL ) return false;
+
 		g_sound_bullet[0] = Mix_LoadWAV("sound/Gun+Silencer.wav");
 		g_sound_bullet[1] = Mix_LoadWAV("sound/Gun+Shot2.wav");
 		g_sound_explosion[0] = Mix_LoadWAV("sound/Gun+357+Magnum.wav");
@@ -100,9 +103,26 @@ void close()
 	g_background.Free();
 	SDL_DestroyRenderer(gScreen);
 	gScreen = NULL;
+	Mix_FreeChunk(g_sound_bullet[0]);
+	Mix_FreeChunk(g_sound_bullet[1]);
+	Mix_FreeChunk(g_sound_explosion[0]);
+	Mix_FreeChunk(g_sound_explosion[1]);
+	Mix_FreeChunk(g_sound_jump);
+	Mix_FreeMusic(g_music);
+	g_sound_bullet[0] = NULL;
+	g_sound_bullet[1] = NULL;
+	g_sound_explosion[0] = NULL;
+	g_sound_explosion[1] = NULL;
+	g_sound_jump = NULL;
+	g_music = NULL;
+
 
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
+
+	Mix_Quit();
+	IMG_Quit();
+	SDL_Quit();
 }
 
 vector<ThreatsObject*> MakeThreatList()
@@ -172,6 +192,7 @@ int main(int argc, char* argv[])
 	}
 
 	again_label:
+	Mix_PlayMusic(g_music, -1);
 
 	GameMap game_map;
 	game_map.LoadMap("images/map.dat");
@@ -352,10 +373,10 @@ int main(int argc, char* argv[])
 							quit = false;
 							goto again_label;
 						}
-						/*p_threat->Free();
+						p_threat->Free();
 							close();
 							SDL_Quit();
-							return 0;*/
+							return 0;
 
 					
 					}

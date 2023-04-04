@@ -32,9 +32,10 @@ const int COLOR_KEY_B = 180;
 
 const int RENDER_DRAW_COLOR = 0xff;
 
-static Mix_Chunk* g_sound_bullet[2];
-static Mix_Chunk* g_sound_explosion[2];
-static Mix_Chunk* g_sound_jump;
+static Mix_Chunk* g_sound_bullet[2] = { NULL };
+static Mix_Chunk* g_sound_explosion[2] = { NULL };
+static Mix_Chunk* g_sound_jump = NULL;
+static Mix_Music* g_music = NULL;
 
 #define TILE_SIZE 64
 
@@ -70,9 +71,9 @@ namespace SDLCommonFunc
 {
 	bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
 	int ShowMenu(SDL_Renderer* gScreen, TTF_Font* font,
-		const std::string& menu1,
-		const std::string& menu2,
-		const std::string& img_name);
+					const std::string& menu1,
+					const std::string& menu2,
+					const std::string& img_name);
 }
 
 

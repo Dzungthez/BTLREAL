@@ -2,9 +2,9 @@
 #include "CommonFunc.h"
 
 int SDLCommonFunc::ShowMenu(SDL_Renderer* gScreen, TTF_Font* font,
-    const std::string& menu1,
-    const std::string& menu2,
-    const std::string& img_name)
+                            const std::string& menu1,
+                            const std::string& menu2,
+                            const std::string& img_name)
 {
     char* ch1 = (char*)menu1.c_str();
     char* ch2 = (char*)menu2.c_str();

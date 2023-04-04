@@ -127,6 +127,21 @@ void MainObject :: HandleInputAction(SDL_Event events, SDL_Renderer* screen, Mix
 			UpdateImagePlayer(screen);
 		}
 		break;
+		case SDLK_m:
+		{
+			if (Mix_PausedMusic() == 1)
+			{
+				//Resume the music
+				Mix_ResumeMusic();
+			}
+			//If the music is playing
+			else
+			{
+				//Pause the music
+				Mix_PauseMusic();
+			}
+		}
+
 		default:
 			break;
 		}
