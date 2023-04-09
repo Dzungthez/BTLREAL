@@ -105,14 +105,7 @@ int SDLCommonFunc::ShowMenu(SDL_Renderer* gScreen, TTF_Font* font,
                     }
                 }
                 break;
-            case SDL_KEYDOWN:
-                if (event.key.keysym.sym == SDLK_ESCAPE)
-                {
-                    text_object[0].Free();
-                    text_object[1].Free();
-                    gBackground.Free();
-                    return 1;
-                }
+            
             }
         }
 

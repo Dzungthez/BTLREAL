@@ -287,7 +287,7 @@ void MainObject::DoPlayer(Map& map_data)
 	}
 
 	if (come_back_time_ > 0)
-	{
+	{		
 		come_back_time_--;
 		if (come_back_time_ == 0)
 		{

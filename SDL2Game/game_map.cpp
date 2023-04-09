@@ -37,18 +37,22 @@ void GameMap::LoadMap(const char* name)
 	fclose(fp);
 }
 
-void GameMap::LoadTiles(SDL_Renderer* screen) // tải các ảnh cho từng ô, và lưu trong mảng tile_mat_
+void GameMap::LoadTiles(SDL_Renderer* screen, const int& idx) // tải các ảnh cho từng ô, và lưu trong mảng tile_mat_
 {
-	char file_img[30];
-	FILE* fp = NULL;
+	std::stringstream ss;
+	FILE* fp = nullptr;
 
-	for (int i = 0; i < MAX_TILES; i++) {
-		sprintf_s(file_img, "images/%d.png", i);
-		fopen_s(&fp, file_img, "rb");
-		if (fp == NULL) continue;
-		fclose(fp);
+	for (int i = 0; i < MAX_TILES; i++) 
+	{
+		ss.str("");
+		ss << "map/map" << idx << "/" << i << ".png";
+		const std::string& file_img = ss.str();
 
-		tile_mat_[i].LoadImg(file_img, screen);
+		if (fopen_s(&fp, file_img.c_str(), "rb") == 0)
+		{
+			fclose(fp);
+			tile_mat_[i].LoadImg(file_img, screen);
+		}
 	}
 }
 

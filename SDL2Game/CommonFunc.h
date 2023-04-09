@@ -3,6 +3,8 @@
 
 #include <windows.h>
 #include <string>
+#include <sstream>
+#include <ctime>
 #include <vector>
 #include <SDL.h>
 #include <SDL_image.h>
@@ -45,6 +47,7 @@ static Mix_Music* g_music = NULL;
 #define BLANK_TILE 0
 
 #define STATE_MONEY 14
+#define TOTAL_MAP 6
 
 typedef struct Input
 {

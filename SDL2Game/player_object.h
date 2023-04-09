@@ -59,6 +59,7 @@ public:
 	int get_frame_height() const { return height_frame_; }
 	void set_comeback_time(const int& cb_time) { come_back_time_ = cb_time; }
 	int GetMoneyCount() const { return money_count; }
+	void SetMoneyCount(const int & money) { money_count = money; }
 
 private:
 

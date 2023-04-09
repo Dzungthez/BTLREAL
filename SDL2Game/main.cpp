@@ -10,7 +10,7 @@
 #include "player_power.h"
 #include "Geometric.h"
 
-TTF_Font *font_time = NULL;
+TTF_Font* font_time = NULL;
 TTF_Font* g_font_MENU = NULL;
 BaseObject g_background;
 bool init()
@@ -77,7 +77,7 @@ bool init()
 
 		// read files wav audio
 		g_music = Mix_LoadMUS("sound/music.mp3");
-		if (g_music == NULL ) return false;
+		if (g_music == NULL) return false;
 
 		g_sound_bullet[0] = Mix_LoadWAV("sound/Gun+Silencer.wav");
 		g_sound_bullet[1] = Mix_LoadWAV("sound/Gun+Shot2.wav");
@@ -97,9 +97,49 @@ bool LoadBackground()
 	if (!ret) return false;
 	return true;
 }
+std::vector<GameMap*> map_list;
+bool LoadMap()
+{
+	bool ret = true;
+	GameMap* map1 = new GameMap();
+	map1->LoadMap("map//map1//map.dat");
+	map_list.push_back(map1);
+
+	GameMap* map2 = new GameMap();
+	map2->LoadMap("map//map2//map.dat");
+	map_list.push_back(map2);
+	
+	GameMap* map3 = new GameMap();
+	map3->LoadMap("map//map3//map.dat");
+	map_list.push_back(map3);
+	
+	GameMap* map4 = new GameMap();
+	map4->LoadMap("map//map4//map.dat");
+	map_list.push_back(map4);
+	
+	GameMap* map5 = new GameMap();
+	map5->LoadMap("map//map5//map.dat");
+	map_list.push_back(map5);
+	
+	GameMap* map6 = new GameMap();
+	map6->LoadMap("map//map6//map.dat");
+	map_list.push_back(map6);
+	
+	if (map_list.size() < TOTAL_MAP)
+	{
+		ret = false;
+		cout << "fail to load map list \n";
+	}
+	return ret;
+}
 
 void close()
 {
+	for (auto map : map_list)
+	{
+		delete map;
+	}
+	map_list.clear();
 	g_background.Free();
 	SDL_DestroyRenderer(gScreen);
 	gScreen = NULL;
@@ -109,6 +149,8 @@ void close()
 	Mix_FreeChunk(g_sound_explosion[1]);
 	Mix_FreeChunk(g_sound_jump);
 	Mix_FreeMusic(g_music);
+	TTF_CloseFont(font_time);
+	TTF_CloseFont(g_font_MENU);
 	g_sound_bullet[0] = NULL;
 	g_sound_bullet[1] = NULL;
 	g_sound_explosion[0] = NULL;
@@ -190,14 +232,19 @@ int main(int argc, char* argv[])
 		cout << "Couldn't load background \n" << SDL_GetError();
 		return -1;
 	}
+	if (!LoadMap()) {
+		cout << "Couldn't load map \n" << SDL_GetError();
+		return -1;
+	}
 
-	again_label:
-	Mix_PlayMusic(g_music, -1);
-
-	GameMap game_map;
-	game_map.LoadMap("images/map.dat");
-	game_map.LoadTiles(gScreen);
-
+again_label:
+	//Mix_PlayMusic(g_music, -1);
+	// random map
+	srand(time(0));
+	int rand_map = rand() % TOTAL_MAP;
+	GameMap *game_map = map_list.at(rand_map);
+	game_map->LoadTiles(gScreen, rand_map + 1);
+	// help me debug
 	MainObject p_player;
 	p_player.LoadImg("images/player_right.png", gScreen);
 	p_player.set_clips();
@@ -207,26 +254,26 @@ int main(int argc, char* argv[])
 
 	PlayerMoney player_money;
 	player_money.Init(gScreen);
-	player_money.SetPos(SCREEN_WIDTH/2 - 300, 4);
+	player_money.SetPos(SCREEN_WIDTH / 2 - 300, 4);
 
 	vector<ThreatsObject*> threats_list = MakeThreatList();
 
 	ExplosionObject exp_threat;
 	bool tRet = exp_threat.LoadImg("images//ex1.png", gScreen);
 	if (!tRet)
-		{
-			printf("could not load img ex1 \n");
-			return -1;
-		}
+	{
+		printf("could not load img ex1 \n");
+		return -1;
+	}
 	exp_threat.set_clip();
 
 	ExplosionObject exp_main;
 	bool pRet = exp_main.LoadImg("images//ex3.png", gScreen);
 	if (!pRet)
-		{
-			printf("could not load img ex3\n");
-			return -1;
-		}
+	{
+		printf("could not load img ex3\n");
+		return -1;
+	}
 	exp_main.set_clip();
 
 	int num_die = 0;
@@ -268,9 +315,9 @@ int main(int argc, char* argv[])
 		SDL_RenderClear(gScreen);
 
 		g_background.Render(gScreen, NULL);
-		
 
-		Map map_data = game_map.getMap();
+
+		Map map_data = game_map->getMap();
 
 		p_player.HandleBullet(gScreen);
 
@@ -278,19 +325,19 @@ int main(int argc, char* argv[])
 		p_player.DoPlayer(map_data);
 		p_player.Show(gScreen);
 
-		game_map.SetMap(map_data);
-		game_map.DrawMap(gScreen);
+		game_map->SetMap(map_data);
+		game_map->DrawMap(gScreen);
 
-		// ve hinh hoc
+		// ve khung
 		GeometricFormat rectangle_size(0, 0, SCREEN_WIDTH, 40);
 		ColorData color_data(36, 80, 150);
 		Geometric::RenderRectangle(rectangle_size, color_data, gScreen);
 
-		GeometricFormat outlineSize(1, 1, SCREEN_WIDTH -1, 38);	
+		GeometricFormat outlineSize(1, 1, SCREEN_WIDTH - 1, 38);
 
 		ColorData color_data2(150, 0, 0);
 
-		Geometric :: RenderOutline(outlineSize, color_data2, gScreen);
+		Geometric::RenderOutline(outlineSize, color_data2, gScreen);
 
 
 		player_power.Show(gScreen);
@@ -305,14 +352,14 @@ int main(int argc, char* argv[])
 				p_threat->ImpMoveType(gScreen);
 				p_threat->DoPlayer(map_data);
 				// threat chi ban trong tam nhin cua no
-				
+
 				p_threat->MakeBullet(gScreen, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 				p_threat->Show(gScreen);
 
 				SDL_Rect rect_player = p_player.GetRectFrame();
 				bool bCol1 = false;
-				std :: vector<BulletObject*> tBuller_list = p_threat->get_bullet_list();
+				std::vector<BulletObject*> tBuller_list = p_threat->get_bullet_list();
 				for (int jj = 0; jj < tBuller_list.size(); ++jj)
 				{
 					BulletObject* pt_bullet = tBuller_list.at(jj);
@@ -320,7 +367,7 @@ int main(int argc, char* argv[])
 					{
 						bCol1 = SDLCommonFunc::CheckCollision(pt_bullet->GetRect(), rect_player);
 						if (bCol1)
-						{	
+						{
 							//p_threat->RemoveBullet(jj);
 							break;
 						}
@@ -337,7 +384,7 @@ int main(int argc, char* argv[])
 					int height_exp_frame = exp_main.get_frame_heigth();
 					for (int ex = 0; ex < NUM_FRAME_EXP; ex++)
 					{
-						int x_pos = (p_player.GetRect().x + p_player.get_frame_width()* 0.5) - width_exp_frame * 0.5;
+						int x_pos = (p_player.GetRect().x + p_player.get_frame_width() * 0.5) - width_exp_frame * 0.5;
 						int y_pos = (p_player.GetRect().y + p_player.get_frame_height() * 0.5) - height_exp_frame * 0.5;
 
 						exp_main.set_frame(ex);
@@ -355,7 +402,7 @@ int main(int argc, char* argv[])
 						player_power.Decrease();
 						player_power.Render(gScreen);
 						continue;
-						
+
 					}
 					else
 					{
@@ -374,13 +421,13 @@ int main(int argc, char* argv[])
 							goto again_label;
 						}
 						p_threat->Free();
-							close();
-							SDL_Quit();
-							return 0;
+						close();
+						SDL_Quit();
+						return 0;
 
-					
+
 					}
-					
+
 				}
 
 			}
@@ -416,7 +463,7 @@ int main(int argc, char* argv[])
 							mark_value += 5;
 							for (int ex = 0; ex < NUM_FRAME_EXP; ex++)
 							{
-								
+
 								int x_pos = p_bullet->GetRect().x - frame_exp_width * 0.5;
 								int y_pos = p_bullet->GetRect().y - frame_exp_height * 0.5;
 
@@ -448,7 +495,7 @@ int main(int argc, char* argv[])
 				quit = true;
 				continue;
 			}
-			
+
 		}
 		else
 		{
@@ -469,13 +516,21 @@ int main(int argc, char* argv[])
 		mark_game.RenderText(gScreen, SCREEN_WIDTH * 0.5 - 50, 15);
 
 		int money_count = p_player.GetMoneyCount();
+		// help me to increase player power when money is enough
+		if (money_count >= 40)
+		{
+			player_power.Increase();
+			player_power.Render(gScreen);
+			p_player.SetMoneyCount(0);
+			num_die--;
+
+		}
 		std::string money_str = std::to_string(money_count);
 
 		money_game.SetText(money_str);
 		money_game.LoadFromRenderText(font_time, gScreen);
 		money_game.RenderText(gScreen, SCREEN_WIDTH * 0.5 - 250, 15);
 
-		
 
 		SDL_RenderPresent(gScreen);
 

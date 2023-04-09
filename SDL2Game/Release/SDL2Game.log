@@ -1,0 +1,25 @@
+﻿  stdafx.cpp
+  BaseObject.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\CommonFunc.h(7): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  BulletObject.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\CommonFunc.h(7): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  CommonFunc.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\CommonFunc.h(7): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  ExplosionObject.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\CommonFunc.h(7): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  game_map.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\CommonFunc.h(7): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  Geometric.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\CommonFunc.h(7): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  ImpTimer.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\CommonFunc.h(7): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  main.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\CommonFunc.h(7): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  player_object.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\CommonFunc.h(7): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  play_power.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\CommonFunc.h(7): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  TextObject.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\CommonFunc.h(7): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  ThreatsObject.cpp
+c:\users\dzung nguyen\desktop\sdl2game\sdl2game\CommonFunc.h(7): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
