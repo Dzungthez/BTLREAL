@@ -9,8 +9,8 @@
 
 #define GRAVITY_SPEED 0.8
 #define MAX_FALL_SPEED 10
-#define PLAYER_SPEED 10
-#define PLAYER_JUMP_VAL 20
+#define PLAYER_SPEED 13
+#define PLAYER_JUMP_VAL 18
 
 class MainObject : public BaseObject
 {
@@ -37,7 +37,7 @@ public:
 	void DoPlayer(Map& map_data);
 	void CheckToMap(Map& map_data);
 
-	void SetMapXY(const int map_x, const int map_y) { map_x_ = map_x; map_y_ = map_y; }
+	void SetMapXY(const int &map_x, const int &map_y) { map_x_ = map_x; map_y_ = map_y; }
 	void CenterEntityOnMap(Map& map_data);
 	void UpdateImagePlayer(SDL_Renderer* des);
 
@@ -60,6 +60,10 @@ public:
 	void set_comeback_time(const int& cb_time) { come_back_time_ = cb_time; }
 	int GetMoneyCount() const { return money_count; }
 	void SetMoneyCount(const int & money) { money_count = money; }
+	float GetPosX() const { return x_pos_; }
+	int GetMark() const { return mark_; }
+	void set_mark_val(const int& mark) { mark_ = mark; }
+
 
 private:
 
@@ -85,6 +89,8 @@ private:
 	int map_y_;
 
 	int come_back_time_;
+
+	int mark_;
 };
 
 

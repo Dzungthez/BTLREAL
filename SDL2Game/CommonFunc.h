@@ -14,6 +14,7 @@
 #include <iostream>
 #include "TextObject.h"
 #include "BaseObject.h"
+#include <fstream>
 
 using namespace std;
 
@@ -46,8 +47,9 @@ static Mix_Music* g_music = NULL;
 
 #define BLANK_TILE 0
 
-#define STATE_MONEY 14
+#define STATE_MONEY 19
 #define TOTAL_MAP 6
+#define MAX_COIN 40
 
 typedef struct Input
 {

@@ -122,7 +122,7 @@ void ThreatsObject::InitThreats()
 	if (x_pos_ > 256)
 	{
 		x_pos_ -= 256;
-		animation_a_ -= 256;
+		animation_a_ -= 256; // 4frames
 		animation_b_ -= 256;
 	}
 	else
@@ -338,7 +338,7 @@ void ThreatsObject::InitBullet(BulletObject* p_bullet, SDL_Renderer* screen)
 		{
 			p_bullet->set_is_move(false);
 			p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
-			p_bullet->SetRect(rect_.x + 5, y_pos_ + 10);
+			p_bullet->SetRect(rect_.x + 5, y_pos_ - 700);
 			p_bullet->set_x_val(15);
 			bullet_list_.push_back(p_bullet);
 		}

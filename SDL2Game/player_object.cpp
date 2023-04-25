@@ -24,6 +24,7 @@ MainObject::MainObject()
 	on_ground_ = false;
 	come_back_time_ = 0;
 	money_count = 0;
+	mark_ = 0;
 }
 
 MainObject::~MainObject()

@@ -9,84 +9,44 @@
 #include "TextObject.h"
 #include "player_power.h"
 #include "Geometric.h"
+//#include "Explosion.h"
 
+fstream score_file;
 TTF_Font* font_time = NULL;
 TTF_Font* g_font_MENU = NULL;
 BaseObject g_background;
 bool init()
 {
-	bool success = true; //Initialization flag
+	bool success = true;
 
-	//Initialize SDL
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		cout << "SDL could not initialize! SDL Error: \n" << SDL_GetError();
-		success = false;
-	}
-	else
-	{
-		//Set texture filtering to linear
-		if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
-		{
-			cout << "Warning: Linear texture filtering not enabled!";
-		}
+	gWindow = SDL_CreateWindow("SDL2.0 Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	gScreen = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+	if (gWindow == NULL || gScreen == NULL) success = false;
 
-		//Create window
-		gWindow = SDL_CreateWindow("platformer v1", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-		if (gWindow == NULL)
-		{
-			cout << "Window could not be created! SDL Error: \n" << SDL_GetError();
-			success = false;
-		}
-		else
-		{
-			//Create renderer for window
-			gScreen = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
-			if (gScreen == NULL)
-			{
-				cout << "Renderer could not be created! SDL Error: \n" << SDL_GetError();
-				success = false;
-			}
-			else
-			{
-				//Initialize renderer color
-				SDL_SetRenderDrawColor(gScreen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+	SDL_SetRenderDrawColor(gScreen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
 
-				//Initialize PNG loading
-				int imgFlags = IMG_INIT_PNG;
-				if (!(IMG_Init(imgFlags) & imgFlags))
-				{
-					cout << "SDL_image could not initialize! SDL_image Error: \n" << IMG_GetError();
-					success = false;
-				}
-			}
-			if (TTF_Init() == -1)
-			{
-				success = false;
-			}
-		}
-		font_time = TTF_OpenFont("font//dlxfont_.ttf", 15);
-		g_font_MENU = TTF_OpenFont("font/dlxfont_.ttf", 80);
-		if (g_font_MENU == NULL) return false; // menu font
+	//Initialize PNG loading
+	int imgFlags = IMG_INIT_PNG;
+	if (!(IMG_Init(imgFlags) & imgFlags)) success = false;
 
-		if (font_time == NULL)
-		{
-			success = false;
-		}
-		if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) return false;
+	if (TTF_Init() == -1) success = false;
 
-		// read files wav audio
-		g_music = Mix_LoadMUS("sound/music.mp3");
-		if (g_music == NULL) return false;
+	font_time = TTF_OpenFont("font/dlxfont_.ttf", 15);
+	if (font_time == NULL) success = false;
 
-		g_sound_bullet[0] = Mix_LoadWAV("sound/Gun+Silencer.wav");
-		g_sound_bullet[1] = Mix_LoadWAV("sound/Gun+Shot2.wav");
-		g_sound_explosion[0] = Mix_LoadWAV("sound/Gun+357+Magnum.wav");
-		g_sound_jump = Mix_LoadWAV("sound/cartoon-jump-6462.wav");
+	g_font_MENU = TTF_OpenFont("font/dlxfont_.ttf", 80);
+	if (g_font_MENU == NULL) success = false;
 
-		if (g_sound_bullet[0] == NULL || g_sound_bullet[1] == NULL || g_sound_explosion == NULL) return false;
+	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) success = false;
 
-	}
+	// read files wav audio
+	g_music = Mix_LoadMUS("sound/music.mp3");
+	g_sound_bullet[0] = Mix_LoadWAV("sound/Gun+Silencer.wav");
+	g_sound_bullet[1] = Mix_LoadWAV("sound/Gun+Shot2.wav");
+	g_sound_explosion[0] = Mix_LoadWAV("sound/Gun+357+Magnum.wav");
+	g_sound_jump = Mix_LoadWAV("sound/cartoon-jump-6462.wav");
+
+	if (g_sound_bullet[0] == NULL || g_sound_bullet[1] == NULL || g_sound_explosion == NULL || g_music == NULL) success = false;
 
 	return success;
 }
@@ -223,7 +183,7 @@ vector<ThreatsObject*> MakeThreatList()
 int main(int argc, char* argv[])
 {
 	ImpTimer fps_timer;
-
+	Uint32 start_time = SDL_GetTicks() / 1000;
 	if (!init()) {
 		cout << "Couldn't init \n" << SDL_GetError();
 		return -1;
@@ -240,21 +200,51 @@ int main(int argc, char* argv[])
 again_label:
 	//Mix_PlayMusic(g_music, -1);
 	// random map
-	srand(time(0));
-	int rand_map = rand() % TOTAL_MAP;
-	GameMap *game_map = map_list.at(rand_map);
-	game_map->LoadTiles(gScreen, rand_map + 1);
-	// help me debug
-	MainObject p_player;
-	p_player.LoadImg("images/player_right.png", gScreen);
-	p_player.set_clips();
-
+	int ret_menu = SDLCommonFunc::ShowMenu(gScreen, g_font_MENU, "Play Game", "Exit", "images//MENU.png");
+	if (ret_menu == 1)
+	{
+		cout << "could not load menu img \n";
+		return -1;
+	}
 	PlayerPower player_power;
 	player_power.Init(gScreen);
 
 	PlayerMoney player_money;
 	player_money.Init(gScreen);
 	player_money.SetPos(SCREEN_WIDTH / 2 - 300, 4);
+
+	TextObject time_game;
+	time_game.SetColor(TextObject::WHITE_TEXT);
+
+	TextObject mark_game;
+	mark_game.SetColor(TextObject::WHITE_TEXT);
+	UINT mark_value = 0;
+
+	TextObject money_game;
+	money_game.SetColor(TextObject::WHITE_TEXT);
+
+	TextObject highest_score;
+	int num_die = 0;
+
+again_label1:
+
+	srand(time(0));
+	int rand_map = rand() % TOTAL_MAP;
+	GameMap *game_map = map_list.at(rand_map);
+	game_map->LoadTiles(gScreen, rand_map + 1);
+	MainObject p_player;
+	p_player.LoadImg("images/player_right.png", gScreen);
+	p_player.set_clips();
+
+	//Explosion main_exp;
+	//bool ret = main_exp.LoadImg("images//Explosion.png", gScreen);
+	//if (!ret)
+	//{
+	//	printf("could not load img Explosion \n");
+	//	return -1;
+	//}
+	//main_exp.set_clips();
+	//main_exp.set_is_exploded(true);
 
 	vector<ThreatsObject*> threats_list = MakeThreatList();
 
@@ -276,27 +266,12 @@ again_label:
 	}
 	exp_main.set_clip();
 
-	int num_die = 0;
 
 	//time text
-	TextObject time_game;
-	time_game.SetColor(TextObject::WHITE_TEXT);
-
-	TextObject mark_game;
-	mark_game.SetColor(TextObject::WHITE_TEXT);
-	UINT mark_value = 0;
-
-	TextObject money_game;
-	money_game.SetColor(TextObject::WHITE_TEXT);
+	
 
 	bool quit = false;
 
-	int ret_menu = SDLCommonFunc::ShowMenu(gScreen, g_font_MENU, "Play Game", "Exit", "images//MENU.png");
-	if (ret_menu == 1)
-	{
-		cout << "could not load menu img \n";
-		quit = true;
-	}
 	while (!quit)
 	{
 		fps_timer.start();
@@ -319,12 +294,19 @@ again_label:
 
 		Map map_data = game_map->getMap();
 
+		// set explosion
+		
+
 		p_player.HandleBullet(gScreen);
 
 		p_player.SetMapXY(map_data.start_x_, map_data.start_y_);
 		p_player.DoPlayer(map_data);
 		p_player.Show(gScreen);
-
+		
+		//main_exp.SetMapXY(map_data.start_x_, map_data.start_y_);
+		//main_exp.ExplosionMove(map_data);
+		//main_exp.Show(gScreen);
+		
 		game_map->SetMap(map_data);
 		game_map->DrawMap(gScreen);
 
@@ -356,9 +338,23 @@ again_label:
 				p_threat->MakeBullet(gScreen, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 				p_threat->Show(gScreen);
-
+				
 				SDL_Rect rect_player = p_player.GetRectFrame();
+				float player_x_pos = p_player.GetPosX();
+				
+				if (player_x_pos <= map_data.max_x_ && player_x_pos >= map_data.max_x_ - 128)
+				{
+					// di het map
+					SDL_Delay(500);
+					goto again_label1;
+					
+				}
+				
 				bool bCol1 = false;
+				SDL_Rect rect_threat = p_threat->GetRectFrame();
+				//int dis = rect_threat.x - rect_player.x;
+				//if (dis < 500 && dis >= 0) p_threat->MakeBullet(gScreen, SCREEN_WIDTH, SCREEN_HEIGHT);
+
 				std::vector<BulletObject*> tBuller_list = p_threat->get_bullet_list();
 				for (int jj = 0; jj < tBuller_list.size(); ++jj)
 				{
@@ -374,7 +370,7 @@ again_label:
 					}
 				}
 
-				SDL_Rect rect_threat = p_threat->GetRectFrame();
+				rect_threat = p_threat->GetRectFrame();
 				bool bCol2 = SDLCommonFunc::CheckCollision(rect_player, rect_threat);
 
 				if (bCol1 || bCol2)
@@ -394,7 +390,7 @@ again_label:
 					}
 					num_die++;
 
-					if (num_die <= 3)
+					if (num_die < 3)
 					{
 						p_player.SetRect(0, 0);
 						p_player.set_comeback_time(60);
@@ -406,6 +402,10 @@ again_label:
 					}
 					else
 					{
+						score_file.open("highscore.txt", ios::app);
+						score_file << p_player.GetMark() << " ";
+						score_file.close();
+
 						Sleep(500);
 						int ret_menu = SDLCommonFunc::ShowMenu(gScreen, g_font_MENU,
 							"Play Again", "Exit",
@@ -417,6 +417,8 @@ again_label:
 						}
 						else
 						{
+							start_time = SDL_GetTicks() /1000;
+
 							quit = false;
 							goto again_label;
 						}
@@ -429,6 +431,8 @@ again_label:
 					}
 
 				}
+				
+				
 
 			}
 		}
@@ -461,6 +465,7 @@ again_label:
 						{
 							Mix_PlayChannel(-1, g_sound_explosion[0], 0);
 							mark_value += 5;
+							p_player.set_mark_val(mark_value);
 							for (int ex = 0; ex < NUM_FRAME_EXP; ex++)
 							{
 
@@ -481,8 +486,8 @@ again_label:
 		}
 		// show time
 		std::string str_time = "Time: ";
-		Uint32 time_val = SDL_GetTicks() / 1000;
-		Uint32 val_time = 300 - time_val;
+		Uint32 val_time = SDL_GetTicks() / 1000 - start_time;
+		// Uint32 val_time = 300 - time_val;
 
 		if (val_time <= 0)
 		{
@@ -515,9 +520,30 @@ again_label:
 		mark_game.LoadFromRenderText(font_time, gScreen);
 		mark_game.RenderText(gScreen, SCREEN_WIDTH * 0.5 - 50, 15);
 
+		// show highest score
+		string strHighScore ("High Score: ");
+		score_file.open("highscore.txt");
+		if (!score_file) return -1;
+		int score_in_file;
+		int max_score = 0;
+		while (score_file >> score_in_file)
+			if (score_in_file > max_score) max_score = score_in_file;
+		// ra max trong file la bao nhieu
+		score_file.close();
+		int p_score = p_player.GetMark();
+		if (p_score > max_score)
+		{
+			max_score = p_score;
+		}
+		strHighScore += to_string(max_score);
+
+		highest_score.SetText(strHighScore);
+		highest_score.LoadFromRenderText(font_time, gScreen);
+		highest_score.RenderText(gScreen, SCREEN_WIDTH * 0.5 + 150, 15);
+
 		int money_count = p_player.GetMoneyCount();
 		// help me to increase player power when money is enough
-		if (money_count >= 40)
+		if (money_count >= MAX_COIN)
 		{
 			player_power.Increase();
 			player_power.Render(gScreen);
@@ -557,6 +583,7 @@ again_label:
 	}
 
 	close();
+
 
 	return 0;
 }
